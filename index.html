@@ -3,717 +3,1416 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menu Spesial - Dapur Mama El</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Phosphor Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Dapur Mama El - Mie Jebew Premium</title>
     
+    <!-- 
+        ========================================================================
+        DAPUR MAMA EL - ENTERPRISE FOOD ORDERING WEB APP
+        Version: 12.2 FINAL (Clean UI, No Points, Fixed Ongkir Note)
+        Theme: Exclusive Floral Garden & Music Box Vibes
+        Author: Pro AI Engine for Amarulloh Zikri (Dapur Mama El)
+        ========================================================================
+    -->
+
+    <!-- External Frameworks & Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK (Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Export safely to window object for global access
+        window.firebaseModules = {
+            initializeApp, getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged,
+            getFirestore, collection, addDoc, onSnapshot, serverTimestamp, doc, setDoc
+        };
+    </script>
+    
+    <!-- Tailwind CSS Enterprise Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { 
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        serif: ['"Playfair Display"', 'serif']
-                    },
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], serif: ['"Playfair Display"', 'serif'] },
                     colors: {
-                        brand: {
-                            light: '#FFF7F3',     // Krem hangat
-                            peach: '#FFDDC1',     // Persik lembut
-                            orange: '#FF7E5F',    // Orange cerah
-                            terracotta: '#D45D3A', // Terracotta/merah bata mewah
-                            dark: '#4A2511',      // Cokelat tua untuk teks
-                            leaf: '#4CAF50'
-                        }
+                        pastel: { blush: '#FFF0F5', peach: '#FFE4E1', sage: '#E8F1D4', cream: '#FFFDD0', mint: '#F0FFF0', sand: '#FDFBF7' },
+                        brand: { rose: '#D47A8C', terracotta: '#C85A43', leaf: '#7E9962', dark: '#2C2119', gold: '#D4AF37' }
                     },
                     animation: {
-                        'float': 'float 4s ease-in-out infinite',
-                        'float-delayed': 'float 4s ease-in-out 2s infinite',
-                        'bounce-slight': 'bounceSlight 2s infinite',
+                        'spin-slow': 'spin 15s linear infinite',
+                        'float-1': 'float1 8s ease-in-out infinite',
+                        'float-2': 'float2 10s ease-in-out infinite reverse',
+                        'pulse-soft': 'pulseSoft 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-down': 'slideDown 0.5s ease-out forwards',
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'fade-out': 'fadeOut 0.8s ease-in forwards',
+                        'pop': 'pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                        'shimmer-fast': 'shimmerEffect 2s infinite'
                     },
                     keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-                            '50%': { transform: 'translateY(-8px) rotate(3deg)' },
-                        },
-                        bounceSlight: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-3px)' },
-                        }
+                        float1: { '0%, 100%': { transform: 'translateY(0) rotate(0deg)' }, '50%': { transform: 'translateY(-15px) rotate(5deg)' } },
+                        float2: { '0%, 100%': { transform: 'translateY(0) rotate(0deg)' }, '50%': { transform: 'translateY(-20px) rotate(-5deg)' } },
+                        pulseSoft: { '0%, 100%': { opacity: '1', transform: 'scale(1)' }, '50%': { opacity: '.85', transform: 'scale(0.98)' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(50px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        slideDown: { '0%': { opacity: '0', transform: 'translateY(-50px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        fadeOut: { '0%': { opacity: '1' }, '100%': { opacity: '0' } },
+                        pop: { '0%': { transform: 'scale(0.8)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } },
+                        shimmerEffect: { '0%': { left: '-100%' }, '20%': { left: '200%' }, '100%': { left: '200%' } }
                     }
                 }
             }
         }
     </script>
+
+    <!-- Global CSS Architecture -->
     <style>
-        body { 
-            background-color: #FFF2EB; /* Soft warm background */
-            -webkit-tap-highlight-color: transparent; 
-            overflow-x: hidden;
-        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { background-color: #EAE6E1; color: #2C2119; -webkit-tap-highlight-color: transparent; overflow-x: hidden; scroll-behavior: smooth; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .no-select { user-select: none; -webkit-user-select: none; }
         
-        /* Custom Elegant Range Slider */
-        input[type=range] {
-            -webkit-appearance: none; width: 100%; background: transparent; position: relative; z-index: 10;
-        }
-        input[type=range]:focus { outline: none; }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 26px; width: 26px; border-radius: 50%;
-            background: #FF7E5F; cursor: pointer; margin-top: -10px;
-            box-shadow: 0 4px 10px rgba(255, 126, 95, 0.5); 
-            border: 3px solid white;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        input[type=range]::-webkit-slider-thumb:active { transform: scale(1.25); }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 6px; cursor: pointer; 
-            background: linear-gradient(to right, #FFDDC1, #FF7E5F); 
-            border-radius: 3px;
-        }
-        
+        /* Lock body scroll completely when modals are open */
+        body.modal-open { overflow: hidden; touch-action: none; }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(255,228,225,0.2); }
+        ::-webkit-scrollbar-thumb { background: #E5D5D0; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #D47A8C; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        .modal-enter { opacity: 0; transform: translateY(100%); transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
-        .modal-enter-active { opacity: 1; transform: translateY(0); }
-        
-        .fade-enter { opacity: 0; transition: opacity 0.3s ease; }
-        .fade-enter-active { opacity: 1; }
 
-        /* Estetik Floral Pattern Background */
-        .bg-floral {
-            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 10c-3.8 0-7 3.2-7 7s3.2 7 7 7 7-3.2 7-7-3.2-7-7-7zm0 18c-6.8 0-12 5.2-12 12s5.2 12 12 12 12-5.2 12-12-5.2-12-12-12zm0 28c-3.8 0-7 3.2-7 7s3.2 7 7 7 7-3.2 7-7-3.2-7-7-7zM16 40c0-3.8-3.2-7-7-7s-7 3.2-7 7 3.2 7 7 7 7-3.2 7-7zm48 0c0-3.8-3.2-7-7-7s-7 3.2-7 7 3.2 7 7 7 7-3.2 7-7z' fill='%23D45D3A' fill-opacity='0.04' fill-rule='evenodd'/%3E%3C/svg%3E");
-        }
+        /* 3D Engine */
+        .perspective-1500 { perspective: 1500px; }
+        .door-left-open { transform: rotateY(-110deg); }
+        .door-right-open { transform: rotateY(110deg); }
+        .door-pattern { background-color: #2C2119; background-image: radial-gradient(#3a2e24 1px, transparent 1px); background-size: 20px 20px; }
 
-        /* Glassmorphism Header */
-        .glass-header {
-            background: linear-gradient(135deg, rgba(255, 247, 243, 0.95), rgba(255, 221, 193, 0.85));
-            backdrop-filter: blur(10px);
-        }
+        /* Range Slider */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; position: relative; z-index: 10; margin: 18px 0; }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 32px; width: 32px; border-radius: 50%; background: #D47A8C; cursor: pointer; margin-top: -13px; box-shadow: 0 4px 15px rgba(212, 122, 140, 0.6); border: 4px solid #FFF; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        input[type=range]::-webkit-slider-thumb:active { transform: scale(1.25); background: #C85A43; border-color: #FFF0F5; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: linear-gradient(to right, #FFE4E1, #D47A8C); border-radius: 4px; }
+        
+        /* Custom Checkboxes */
+        .custom-checkbox input:checked + div { background-color: #D47A8C; border-color: #D47A8C; }
+        .custom-checkbox input:checked + div svg { display: block; animation: pop 0.2s forwards; }
+        .agree-checkbox input:checked + div { background-color: #7E9962; border-color: #7E9962; }
+        .agree-checkbox input:checked + div svg { display: block; animation: pop 0.2s forwards; }
+
+        /* UI Overlays & Panels (STRICT CSS STATE MACHINE) */
+        .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(255, 255, 255, 0.9); }
+        
+        .modal-overlay { opacity: 0; pointer-events: none; transition: opacity 0.4s ease; z-index: 50; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        
+        /* Bottom Sheet (Item Modal) */
+        .modal-content { transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); z-index: 51; }
+        .modal-content.active { transform: translateY(0); }
+        .modal-content.is-swiping { transition: none !important; }
+        
+        /* Side Panel (Cart, Checkout, Receipt) */
+        .slide-panel { transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); z-index: 60; }
+        .slide-panel.active { transform: translateX(0); }
+        .slide-panel.is-swiping { transition: none !important; }
+
+        /* Center Popups (AntiSpam, Success, Review, Admin) */
+        .scale-panel { transform: scale(0.9); opacity: 0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; }
+        .scale-panel.active { transform: scale(1); opacity: 1; pointer-events: auto; }
+
+        .floral-bg { background-color: #FFF0F5; background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D47A8C' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='M10.5 21C4.7 21 0 16.3 0 10.5S4.7 0 10.5 0 21 4.7 21 10.5 16.3 21 10.5 21zm0-19C5.8 2 2 5.8 2 10.5S5.8 19 10.5 19 19 15.2 19 10.5 15.2 2 10.5 2zM60 120c-5.8 0-10.5-4.7-10.5-10.5s4.7-10.5 10.5-10.5 10.5 4.7 10.5 10.5-4.7 10.5-10.5 10.5zm0-19c-4.7 0-8.5 3.8-8.5 8.5s3.8 8.5 8.5 8.5 8.5-3.8 8.5-8.5-3.8-8.5-8.5-8.5zM10.5 80C4.7 80 0 75.3 0 69.5S4.7 59 10.5 59 21 63.7 21 69.5 16.3 80 10.5 80zm0-19C5.8 61 2 64.8 2 69.5S5.8 78 10.5 78 19 74.2 19 69.5 15.2 61 10.5 61zm100-22c-5.8 0-10.5-4.7-10.5-10.5s4.7-10.5 10.5-10.5 10.5 4.7 10.5 10.5-4.7 10.5-10.5 10.5zm0-19c-4.7 0-8.5 3.8-8.5 8.5s3.8 8.5 8.5 8.5 8.5-3.8 8.5-8.5-3.8-8.5-8.5-8.5z'/%3E%3C/g%3E%3C/svg%3E"); }
+        .best-seller-glow { box-shadow: 0 0 18px rgba(212, 122, 140, 0.45); animation: pulseSoft 3s infinite; }
+        .shimmer { position: relative; overflow: hidden; }
+        .shimmer::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.7), transparent); transform: skewX(-20deg); animation: shimmerEffect 2.5s infinite; }
+        #sakura-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; opacity: 0.7; }
+        .tab-btn.active { background-color: #D47A8C; color: white; border-color: #D47A8C; box-shadow: 0 4px 10px rgba(212, 122, 140, 0.3); }
+        #security-captcha { border-radius: 12px; background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IiNjY2MiLz48L3N2Zz4='); }
+        .swipe-handle { width: 45px; height: 5px; background-color: #CBD5E1; border-radius: 9999px; margin: 0 auto 15px auto; cursor: grab; }
+        .swipe-handle:active { cursor: grabbing; }
     </style>
 </head>
-<body class="pb-36 text-brand-dark antialiased">
+<body class="text-brand-dark antialiased relative selection:bg-brand-rose selection:text-white" id="main-body">
 
-    <!-- Kontainer Partikel Global -->
-    <div id="particle-container" class="fixed inset-0 pointer-events-none z-[100] overflow-hidden"></div>
+    <!-- 
+        ========================================================================
+        1. AUDIO & VISUAL ENGINE
+        ========================================================================
+    -->
+    <audio id="bg-music" loop preload="auto">
+        <!-- Direct MP3 Link from Pixabay (Relaxing Lofi Music Box) -->
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+    </audio>
 
-    <div class="max-w-md mx-auto bg-brand-light min-h-screen relative shadow-2xl overflow-hidden flex flex-col">
+    <canvas id="sakura-canvas"></canvas>
+
+    <!-- Music Toggle -->
+    <button id="music-controller" class="fixed top-5 left-5 z-40 bg-white/80 backdrop-blur-md p-2.5 rounded-full shadow-lg border border-pastel-peach text-brand-rose transition-all hidden hover:scale-110 active:scale-95" onclick="window.App.audio.toggle()">
+        <i id="music-icon" class="ph-fill ph-speaker-high text-xl"></i>
+    </button>
+
+    <!-- 
+        ========================================================================
+        2. 3D DOOR SPLASH SCREEN
+        ========================================================================
+    -->
+    <div id="splash-door-container" class="fixed inset-0 z-[100] flex perspective-1500 max-w-md mx-auto overflow-hidden bg-black no-select">
+        <!-- Pintu Kiri -->
+        <div id="door-left" class="w-1/2 h-full door-pattern border-r-2 border-brand-gold/40 origin-left transition-transform duration-[1500ms] ease-in-out flex flex-col justify-center items-end pr-2 shadow-[inset_-10px_0_20px_rgba(0,0,0,0.5)]">
+            <div class="w-4 h-16 border-2 border-brand-gold/50 rounded-l-md mr-1 border-r-0 opacity-50"></div>
+        </div>
+        <!-- Pintu Kanan -->
+        <div id="door-right" class="w-1/2 h-full door-pattern border-l-2 border-brand-gold/40 origin-right transition-transform duration-[1500ms] ease-in-out flex flex-col justify-center items-start pl-2 shadow-[inset_10px_0_20px_rgba(0,0,0,0.5)]">
+            <div class="w-4 h-16 border-2 border-brand-gold/50 rounded-r-md ml-1 border-l-0 opacity-50"></div>
+        </div>
+
+        <div id="door-content" class="absolute inset-0 flex flex-col justify-center items-center pointer-events-none transition-opacity duration-700">
+            <div class="mb-10 text-center animate-pulse-soft">
+                <h1 class="font-serif text-4xl font-extrabold text-brand-gold tracking-wider drop-shadow-[0_0_10px_rgba(212,175,55,0.5)] select-none">Dapur Mama El</h1>
+                <p id="splash-door-text" class="text-pastel-peach/90 text-[11px] tracking-[0.2em] mt-3 uppercase font-medium transition-all duration-700 select-none">Selamat Datang di Dapur Kami</p>
+            </div>
+
+            <!-- Kunci Pembuka -->
+            <button id="door-lock" onclick="window.App.bootstrap()" class="pointer-events-auto mt-4 w-20 h-20 bg-gradient-to-br from-brand-gold to-[#B8860B] rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.4)] border-4 border-[#8B6508] transition-all hover:scale-105 active:scale-95 group relative select-none">
+                <div class="absolute inset-0 rounded-full border border-white/30"></div>
+                <i class="ph-fill ph-keyhole text-4xl text-[#3a2e24] group-hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.5)] transition-all"></i>
+            </button>
+            <p class="text-[9px] text-white/50 mt-6 tracking-widest uppercase select-none">Sentuh Kunci Untuk Membuka</p>
+        </div>
+    </div>
+
+    <!-- 
+        ========================================================================
+        3. APLIKASI UTAMA
+        ========================================================================
+    -->
+    <div id="main-app-container" class="max-w-md mx-auto bg-pastel-sand min-h-screen relative shadow-2xl overflow-hidden flex flex-col border-x border-gray-100 pb-28">
         
-        <!-- Header Elegant & Vibrant -->
-        <header class="glass-header p-8 pt-10 rounded-b-[2.5rem] relative shrink-0 z-10 border-b border-white shadow-sm bg-floral">
-            <!-- Dekorasi Bunga Estetik (dipertahankan & dipercantik) -->
-            <div class="absolute top-2 left-3 text-brand-orange opacity-20 animate-float">
-                <i class="ph-fill ph-flower-lotus text-5xl"></i>
-            </div>
-            <div class="absolute bottom-3 right-4 text-brand-terracotta opacity-15 animate-float-delayed">
-                <i class="ph-fill ph-flower-tulip text-6xl"></i>
-            </div>
+        <!-- HEADER -->
+        <header class="floral-bg px-6 pt-12 pb-12 rounded-b-[3rem] relative shrink-0 z-10 shadow-sm overflow-hidden">
+            <!-- ADMIN SETTINGS BUTTON -->
+            <button onclick="window.App.ui.modals.admin.open()" class="absolute top-6 right-6 z-20 w-10 h-10 bg-white/60 backdrop-blur-md rounded-full flex items-center justify-center text-brand-rose/80 hover:text-brand-rose hover:bg-white transition-all shadow-sm active:scale-95 border border-white">
+                <i class="ph-fill ph-gear text-xl"></i>
+            </button>
+
+            <!-- Dekorasi Melayang -->
+            <div class="absolute top-2 left-2 text-brand-rose opacity-20 animate-float-1"><svg width="70" height="70" viewBox="0 0 24 24" fill="currentColor"><path d="M12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,10.5C12.83,10.5 13.5,11.17 13.5,12C13.5,12.83 12.83,13.5 12,13.5C11.17,13.5 10.5,12.83 10.5,12C10.5,11.17 11.17,10.5 12,10.5M12,15.5C14.5,15.5 16.5,13.93 16.5,12C16.5,10.07 14.5,8.5 12,8.5C9.5,8.5 7.5,10.07 7.5,12C7.5,13.93 9.5,15.5 12,15.5M12,18C15.31,18 18,15.31 18,12C18,8.69 15.31,6 12,6C8.69,6 6,8.69 6,12C6,15.31 8.69,18 12,18Z"/></svg></div>
+            <div class="absolute bottom-1 right-2 text-brand-terracotta opacity-15 animate-float-2"><svg width="90" height="90" viewBox="0 0 24 24" fill="currentColor"><path d="M17,12V10H16V12H17M12,4L10,10H14L12,4M20.24,10C20.09,9.5 19.83,9.04 19.47,8.68C19.12,8.32 18.66,8.06 18.16,7.91C17.66,7.76 17.12,7.74 16.6,7.85L14,8.4L12,2H11L12.5,9L10.3,9.45L8.7,4.3C8.56,3.83 8.27,3.43 7.87,3.15C7.47,2.87 6.98,2.73 6.47,2.75C5.97,2.77 5.49,2.95 5.11,3.27C4.72,3.58 4.45,4 4.34,4.5L2.7,10C2.63,10.23 2.6,10.47 2.6,10.71C2.61,11.23 2.76,11.73 3,12.18C3.25,12.63 3.63,13 4.09,13.27C4.55,13.54 5.08,13.68 5.61,13.67C6.15,13.66 6.66,13.52 7.12,13.24C7.57,12.96 7.95,12.57 8.2,12.11C8.45,11.65 8.58,11.13 8.57,10.61L9.12,12.35L10,15.15L8.9,15.4C8.4,15.5 7.94,15.78 7.59,16.14C7.23,16.5 6.97,16.96 6.82,17.46C6.67,17.96 6.65,18.5 6.76,19.03C6.88,19.55 7.11,20.03 7.46,20.41C7.81,20.8 8.27,21.09 8.78,21.24C9.28,21.39 9.82,21.41 10.34,21.3C10.86,21.18 11.34,20.95 11.72,20.6C12.1,20.25 12.37,19.8 12.5,19.3L13.15,17.15L15.3,16.5L16.2,19.3C16.35,19.8 16.63,20.25 17.02,20.6C17.41,20.95 17.89,21.18 18.41,21.3C18.93,21.41 19.47,21.39 19.97,21.24C20.47,21.09 20.93,20.8 21.28,20.41C21.63,20.03 21.87,19.55 21.98,19.03C22.09,18.5 22.07,17.96 21.92,17.46C21.77,16.96 21.5,16.5 21.15,16.14C20.8,15.78 20.34,15.5 19.84,15.4L17.7,14.95L17,12.75H19V12A1.2,1.2 0 0,0 20.24,10Z"/></svg></div>
             
-            <div class="relative z-10 text-center">
-                <p class="text-[10px] uppercase tracking-[0.3em] text-brand-terracotta font-bold mb-2">Spesial Menu</p>
-                <h1 class="text-3xl font-serif font-bold text-brand-dark leading-tight drop-shadow-sm">
-                    MIE JEBEW<br>
-                    <span class="text-2xl italic font-semibold text-brand-orange">Dapur Mama El</span>
-                </h1>
-                <div class="w-16 h-1 bg-gradient-to-r from-brand-peach via-brand-orange to-brand-terracotta mx-auto mt-4 rounded-full opacity-80"></div>
+            <div id="greeting-box" class="relative z-10 text-center opacity-0 transition-opacity duration-700">
+                <div id="store-status-badge" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-md border border-white shadow-sm mb-4 transition-all no-select">
+                    <span class="relative flex h-2.5 w-2.5"><span id="status-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span></span>
+                    <span id="status-text" class="text-[10px] font-extrabold uppercase tracking-widest text-brand-dark">Memeriksa Status...</span>
+                </div>
+                <p id="user-greeting" class="text-xs font-bold text-brand-terracotta mb-1 tracking-wide uppercase select-none">SELAMAT DATANG</p>
+                <h1 class="text-4xl font-serif font-extrabold text-brand-dark leading-none drop-shadow-sm mb-2 no-select">MIE JEBEW</h1>
+                <h2 class="text-lg italic font-serif text-brand-rose no-select">Dapur Mama El</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-brand-peach via-brand-rose to-brand-terracotta mx-auto mt-5 rounded-full opacity-80"></div>
             </div>
         </header>
 
-        <!-- Main Content -->
-        <main class="flex-grow p-5 space-y-6 no-scrollbar overflow-y-auto">
-            
-            <!-- Instruksi Pemesanan Estetik -->
-            <section class="bg-white/80 backdrop-blur-sm border border-brand-peach rounded-2xl p-4 shadow-sm relative overflow-hidden">
-                <div class="absolute -right-6 -top-6 w-20 h-20 bg-gradient-to-br from-brand-peach to-brand-orange rounded-full opacity-10"></div>
-                <h3 class="text-xs font-bold text-brand-dark uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <i class="ph-fill ph-sparkle text-brand-orange"></i> Cara Memesan
-                </h3>
-                <ul class="text-[11px] text-gray-600 space-y-2.5 font-medium">
-                    <li class="flex items-start gap-2"><div class="w-5 h-5 rounded-full bg-brand-peach text-brand-terracotta flex items-center justify-center shrink-0 mt-0.5 font-bold">1</div> Pilih menu & tentukan level pedasmu (1-10).</li>
-                    <li class="flex items-start gap-2"><div class="w-5 h-5 rounded-full bg-brand-peach text-brand-terracotta flex items-center justify-center shrink-0 mt-0.5 font-bold">2</div> Isi data diri & pilih metode pengiriman.</li>
-                    <li class="flex items-start gap-2"><div class="w-5 h-5 rounded-full bg-brand-peach text-brand-terracotta flex items-center justify-center shrink-0 mt-0.5 font-bold">3</div> Kirim pesanan otomatis via WhatsApp.</li>
-                </ul>
-            </section>
-
-            <!-- Daftar Menu -->
-            <section id="menu-container" class="space-y-8 mt-6">
-                <!-- Diisi oleh JS -->
-            </section>
-
-            <hr class="border-dashed border-brand-peach my-6">
-
-            <!-- Keranjang Belanja -->
-            <section id="cart-section" class="hidden">
-                <h2 class="text-sm font-bold uppercase tracking-wider text-brand-dark mb-4 flex items-center gap-2">
-                    <i class="ph-fill ph-shopping-bag-open text-brand-orange text-lg"></i> Pesananmu
-                </h2>
-                <div id="cart-items" class="space-y-3">
-                    <!-- Item keranjang -->
+        <div class="px-5 -mt-7 relative z-20 flex flex-col gap-3">
+            <div class="bg-white rounded-2xl p-4 shadow-lg border border-pastel-peach flex justify-around items-center divide-x divide-gray-100">
+                <div class="text-center px-2 cursor-pointer hover:bg-gray-50 rounded-lg transition-colors p-1" onclick="window.App.ui.scrollTo('reviews-section')">
+                    <div class="flex items-center justify-center gap-1 text-brand-gold mb-1"><i class="ph-fill ph-star text-base"></i><span id="header-rating-score" class="font-extrabold text-sm text-brand-dark">4.9</span></div>
+                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-wider"><span id="header-review-count">100+</span> Ulasan</p>
                 </div>
-            </section>
+                <div class="text-center px-2">
+                    <div class="text-brand-terracotta mb-1"><i class="ph-fill ph-fire text-base"></i><span class="font-extrabold text-sm text-brand-dark ml-1">#1</span></div>
+                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-wider">Terpedas</p>
+                </div>
+                <div class="text-center px-2">
+                    <div class="text-brand-leaf mb-1"><i class="ph-fill ph-check-circle text-base"></i><span class="font-extrabold text-sm text-brand-dark ml-1">100%</span></div>
+                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-wider">Halal</p>
+                </div>
+            </div>
+        </div>
 
-            <!-- Form Data Pemesan -->
-            <section class="bg-white p-5 rounded-3xl border border-brand-peach shadow-sm relative overflow-hidden">
-                <!-- Aksen Dekorasi -->
-                <div class="absolute top-0 right-0 w-32 h-32 bg-brand-peach rounded-bl-full opacity-20 -z-0"></div>
+        <main class="flex-grow p-5 space-y-6 relative z-10" id="swipe-menu-area">
+            <!-- Filter Tabs -->
+            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2 pt-1 -mx-5 px-5 sticky top-0 bg-pastel-sand/90 backdrop-blur-md z-30" id="filter-tabs-container">
+                <button class="tab-btn active shrink-0 px-4 py-2 rounded-full border border-pastel-peach text-xs font-bold text-gray-600 transition-all" data-target="all" onclick="window.App.menu.filter('all')">Semua Menu</button>
+                <button class="tab-btn shrink-0 px-4 py-2 rounded-full border border-pastel-peach text-xs font-bold text-gray-600 transition-all bg-white" data-target="mie_spesial" onclick="window.App.menu.filter('mie_spesial')">Mie Jebew</button>
+                <button class="tab-btn shrink-0 px-4 py-2 rounded-full border border-pastel-peach text-xs font-bold text-gray-600 transition-all bg-white" data-target="paket_hemat" onclick="window.App.menu.filter('paket_hemat')">Spesial Paket</button>
+            </div>
 
-                <h2 class="text-sm font-bold uppercase tracking-wider text-brand-dark mb-5 flex items-center gap-2 relative z-10">
-                    <i class="ph-fill ph-identification-card text-brand-orange text-lg"></i> Data Pengiriman
-                </h2>
-                
-                <div class="space-y-5 relative z-10">
-                    <!-- Nama -->
+            <div class="text-center opacity-40 mb-2 flex items-center justify-center gap-2 no-select">
+                <i class="ph-bold ph-arrows-left-right text-brand-rose"></i><span class="text-[9px] font-bold uppercase tracking-widest text-brand-rose">Geser untuk ganti kategori</span>
+            </div>
+
+            <section id="menu-container" class="space-y-8 min-h-[300px]"></section>
+
+            <div class="flex items-center justify-center gap-4 opacity-40 py-6">
+                <div class="h-px w-20 bg-brand-rose"></div><i class="ph-fill ph-flower-lotus text-brand-rose text-xl"></i><div class="h-px w-20 bg-brand-rose"></div>
+            </div>
+
+            <!-- Reviews -->
+            <section id="reviews-section" class="pt-2 pb-10">
+                <div class="flex justify-between items-end mb-6 bg-white p-4 rounded-2xl shadow-sm border border-pastel-peach/50">
                     <div>
-                        <label class="block text-xs font-bold text-brand-dark mb-1.5 ml-1">Nama Lengkap</label>
-                        <input type="text" id="form-name" class="w-full border border-gray-100 bg-gray-50 shadow-inner rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-orange focus:border-brand-orange focus:bg-white transition-all outline-none" placeholder="Masukkan nama...">
+                        <h2 class="text-base font-serif font-bold text-brand-dark mb-1">Kata Mereka 🤍</h2>
+                        <p class="text-[10px] text-gray-500 font-medium">Ulasan dari pelanggan</p>
                     </div>
-
-                    <!-- Tipe Pesanan -->
-                    <div>
-                        <label class="block text-xs font-bold text-brand-dark mb-2 ml-1">Metode Pesanan</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <label class="flex flex-col items-center justify-center gap-1.5 p-3 bg-gray-50 border border-gray-100 rounded-xl cursor-pointer transition-all has-[:checked]:border-brand-orange has-[:checked]:bg-orange-50 has-[:checked]:text-brand-terracotta has-[:checked]:shadow-md text-gray-500 font-medium text-xs hover:border-brand-peach">
-                                <input type="radio" name="orderType" value="delivery" class="hidden" checked onchange="toggleAddress()">
-                                <i class="ph-fill ph-moped text-2xl mb-1"></i> Diantar
-                            </label>
-                            <label class="flex flex-col items-center justify-center gap-1.5 p-3 bg-gray-50 border border-gray-100 rounded-xl cursor-pointer transition-all has-[:checked]:border-brand-orange has-[:checked]:bg-orange-50 has-[:checked]:text-brand-terracotta has-[:checked]:shadow-md text-gray-500 font-medium text-xs hover:border-brand-peach">
-                                <input type="radio" name="orderType" value="pickup" class="hidden" onchange="toggleAddress()">
-                                <i class="ph-fill ph-storefront text-2xl mb-1"></i> Ambil Sendiri
-                            </label>
-                        </div>
+                    <button onclick="window.App.ui.modals.review.open()" class="text-[10px] font-bold bg-brand-rose/10 text-brand-rose px-4 py-2 rounded-xl hover:bg-brand-rose hover:text-white transition-colors border border-brand-rose/20 shadow-sm active:scale-95">
+                        <i class="ph-bold ph-pencil-simple mr-1"></i> Tulis
+                    </button>
+                </div>
+                <div id="reviews-container" class="space-y-4">
+                    <div class="animate-pulse flex space-x-4 bg-white p-4 rounded-2xl border border-gray-100">
+                        <div class="rounded-full bg-gray-200 h-10 w-10"></div>
+                        <div class="flex-1 space-y-2 py-1"><div class="h-3 bg-gray-200 rounded w-1/4"></div><div class="h-2 bg-gray-200 rounded w-3/4"></div></div>
                     </div>
-
-                    <!-- Alamat Input (Delivery) -->
-                    <div id="address-container" class="transition-all duration-300 transform origin-top">
-                        <label class="block text-xs font-bold text-brand-dark mb-1.5 ml-1">Alamat Pengiriman</label>
-                        <textarea id="form-address" rows="2" class="w-full border border-gray-100 bg-gray-50 shadow-inner rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-orange focus:border-brand-orange focus:bg-white transition-all outline-none resize-none" placeholder="Detail alamat atau patokan rumah..."></textarea>
-                    </div>
-
-                    <!-- Info Pickup -->
-                    <div id="pickup-info" class="hidden transition-all duration-300 transform origin-top fade-enter">
-                        <div class="bg-gradient-to-br from-brand-peach/30 to-brand-orange/10 rounded-xl p-4 border border-brand-orange/20 shadow-sm relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-brand-orange to-brand-terracotta"></div>
-                            
-                            <h4 class="text-xs font-bold text-brand-dark mb-2 flex items-center gap-1.5">
-                                <i class="ph-fill ph-map-pin-line text-brand-terracotta"></i> Lokasi Pengambilan
-                            </h4>
-                            <p class="text-[11px] leading-relaxed text-brand-dark/80 font-bold mb-4">
-                                DESA BATUNYANA RT 03/ RW 01<br>
-                                RUMAH NOMOR 9<br>
-                                KEC. BOJONG, KAB. TEGAL
-                            </p>
-                            
-                            <a href="intent://maps.google.com/maps?daddr=-7.1326029,109.1766695&amp;ll=#Intent;scheme=http;package=com.google.android.apps.maps;end" 
-                               class="inline-flex items-center justify-center gap-2 w-full bg-white text-brand-terracotta font-bold text-xs py-2.5 rounded-lg border border-brand-peach shadow-sm transition-colors hover:bg-brand-peach/50" onclick="triggerClickParticles(event)">
-                                <i class="ph-fill ph-map-trifold text-lg"></i> Buka di Google Maps
-                            </a>
-                            <p class="text-[9px] text-gray-500 text-center mt-2">Jika tombol tidak berfungsi, tekan <a href="https://www.google.com/maps/place/MIE+JEBEW+D.O,+RT.03%2FRW.01,+Sekawera,+Batunyana,+Kec.+Bojong,+Kabupaten+Tegal,+Jawa+Tengah+52465/@-7.1328028,109.1765701,19z/data=!4m6!3m5!1s0x2e6f93a819e72d6f:0xb8fc24363e1dc946!8m2!3d-7.1326029!4d109.1766695!16s%2Fg%2F11n505zs89" target="_blank" class="underline text-brand-orange">link web ini</a>.</p>
-                        </div>
-                    </div>
-
                 </div>
             </section>
         </main>
 
-        <!-- Sticky Checkout Button -->
-        <footer class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-md border-t border-brand-peach/50 p-5 z-20 pb-6 rounded-t-3xl shadow-[0_-15px_40px_rgba(212,93,58,0.08)]">
-            <div class="flex justify-between items-center mb-4 px-1">
-                <div>
-                    <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">Total Bayar</p>
-                    <p class="text-2xl font-serif font-bold text-brand-terracotta leading-none drop-shadow-sm" id="total-price-display">Rp 0</p>
-                </div>
-                <div class="bg-gradient-to-r from-brand-peach to-brand-orange text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-md">
-                    <span id="total-qty-display">0</span> Item
-                </div>
-            </div>
-            
-            <button onclick="processOrder(event)" id="btn-submit" class="w-full bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white font-bold py-3.5 rounded-2xl flex justify-center items-center gap-2 opacity-50 cursor-not-allowed transition-all shadow-[0_8px_20px_rgba(37,211,102,0.3)] hover:shadow-[0_10px_25px_rgba(37,211,102,0.4)] hover:-translate-y-0.5 active:scale-95">
-                <i class="ph-fill ph-whatsapp-logo text-2xl"></i>
-                <span class="tracking-wide text-sm">Pesan via WhatsApp</span>
-            </button>
-            
-            <div id="error-toast" class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-red-500 text-white text-xs font-bold py-2 px-4 rounded-full shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 whitespace-nowrap flex items-center gap-2">
-                <i class="ph-fill ph-warning-circle"></i>
-                <span id="error-msg-text">Lengkapi data dulu ya!</span>
-            </div>
-        </footer>
+    </div> <!-- Akhir Main Container -->
 
-        <!-- MODAL: Tambah ke Keranjang -->
-        <div id="modal-backdrop" class="fixed inset-0 bg-brand-dark/50 backdrop-blur-[2px] z-40 hidden opacity-0 transition-opacity duration-400" onclick="closeModal()"></div>
+    <!-- PERSISTENT CART FOOTER -->
+    <footer id="persistent-cart" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto glass-panel p-4 z-40 pb-6 rounded-t-[2.5rem] shadow-[0_-10px_30px_rgba(74,60,49,0.1)] transition-transform duration-400">
+        <div id="cart-empty-state" class="flex flex-col items-center justify-center py-1 transition-all">
+            <div class="w-10 h-1.5 bg-gray-200 rounded-full mb-4"></div>
+            <p class="text-[11px] font-bold text-gray-400 mb-3 uppercase tracking-widest"><i class="ph-fill ph-shopping-bag mr-1"></i> Keranjang Kosong</p>
+            <button class="w-full bg-gray-100/50 text-gray-400 font-bold py-3.5 rounded-2xl cursor-not-allowed border border-gray-200 flex justify-center items-center gap-2 text-xs uppercase tracking-wider">Pilih Menu Dulu Yuk</button>
+        </div>
         
-        <div id="item-modal" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white rounded-t-[2.5rem] z-50 modal-enter hidden flex flex-col max-h-[85vh] shadow-[0_-20px_50px_rgba(74,37,17,0.2)]">
-            <div class="p-6 overflow-y-auto no-scrollbar pb-24 relative">
-                
-                <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
-                
-                <h3 id="modal-item-name" class="text-2xl font-serif font-bold text-brand-terracotta leading-tight">Nama Menu</h3>
-                <p id="modal-item-desc" class="text-xs text-gray-500 mt-2 font-medium leading-relaxed">Deskripsi menu</p>
-                
-                <hr class="border-gray-100 my-5">
-
+        <div id="cart-filled-state" class="hidden flex-col transition-all animate-fade-in relative">
+            <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-4"></div>
+            <div class="flex justify-between items-center mb-4 px-2">
                 <div>
-                    <div class="flex justify-between items-center mb-4">
-                        <label class="font-bold text-xs uppercase tracking-wider text-brand-dark flex items-center gap-1">
-                            <i class="ph-fill ph-fire text-brand-orange text-base"></i> Level Pedas
+                    <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-1">Total Belanja</p>
+                    <p class="text-2xl font-serif font-extrabold text-brand-terracotta leading-none" id="cart-total-price">Rp 0</p>
+                </div>
+                <div class="bg-pastel-peach text-brand-rose px-3 py-1.5 rounded-xl text-[10px] font-bold border border-brand-rose/20 shadow-sm flex items-center gap-1.5 uppercase tracking-wider">
+                    <i class="ph-fill ph-shopping-cart text-sm"></i> <span id="cart-total-qty">0</span> Item
+                </div>
+            </div>
+            <div class="flex gap-3 w-full">
+                <!-- SATU TOMBOL BESAR YANG FLAWLESS -->
+                <button onclick="window.App.ui.modals.cart.open()" class="w-full bg-brand-dark text-pastel-peach font-bold py-4 rounded-2xl flex justify-center items-center gap-2 shadow-lg shadow-brand-dark/20 hover:bg-black active:scale-[0.98] transition-all">
+                    <span class="text-sm tracking-wide uppercase">Lihat Keranjang (<span id="cart-btn-qty">0</span>)</span>
+                    <i class="ph-bold ph-shopping-bag text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GLOBAL BACKDROP -->
+    <div id="global-backdrop" class="fixed inset-0 bg-brand-dark/60 backdrop-blur-sm z-50 modal-overlay" onclick="window.App.ui.closeAllModals()"></div>
+
+    <!-- MODAL 1: ITEM DETAIL -->
+    <div id="item-modal" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white rounded-t-[2.5rem] modal-content flex flex-col max-h-[92vh]">
+         <div class="pt-4 pb-2 w-full flex justify-center cursor-grab active:cursor-grabbing shrink-0" id="item-modal-handle">
+             <div class="swipe-handle"></div>
+         </div>
+         <div class="px-6 overflow-y-auto no-scrollbar pb-6 flex-grow" id="item-modal-scroll">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 id="modal-item-name" class="text-3xl font-serif font-extrabold text-brand-dark leading-tight">Nama</h3>
+                    <div id="modal-bestseller-badge" class="hidden mt-2 inline-flex items-center gap-1 bg-gradient-to-r from-brand-rose to-brand-terracotta text-white text-[9px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-widest shimmer"><i class="ph-fill ph-fire"></i> Best Seller</div>
+                </div>
+            </div>
+            <p id="modal-item-desc" class="text-xs text-gray-500 mt-3 font-medium leading-relaxed bg-gray-50 p-3 rounded-xl border border-gray-100">Desc</p>
+            <hr class="border-pastel-peach my-6 border-dashed">
+
+            <div class="bg-pastel-blush/60 p-5 rounded-2xl border border-pastel-peach/50 shadow-inner relative overflow-hidden" id="level-container">
+                <div class="absolute -right-4 -bottom-4 text-brand-rose opacity-10"><i class="ph-fill ph-fire text-6xl"></i></div>
+                <div class="flex justify-between items-center mb-1 relative z-10">
+                    <label class="font-bold text-xs uppercase tracking-wider text-brand-dark flex items-center gap-1.5"><i class="ph-fill ph-fire text-brand-terracotta text-base"></i> Tingkat Pedas</label>
+                    <span class="bg-white text-brand-rose text-[11px] font-extrabold px-3 py-1.5 rounded-lg shadow-sm uppercase tracking-wide border border-pastel-peach flex items-center gap-1">Level <span id="modal-level-display" class="text-sm ml-1">1</span></span>
+                </div>
+                <div class="pt-4 pb-1 relative px-2 z-10">
+                    <input type="range" id="modal-level-slider" min="1" max="10" value="1" oninput="window.App.menu.updateCalculations()">
+                    <div class="flex justify-between text-[9px] font-extrabold text-gray-400 mt-3 uppercase tracking-widest"><span>Cupu (1)</span><span class="text-brand-rose">Sedang (5)</span><span class="text-brand-terracotta">Jebew! (10)</span></div>
+                </div>
+            </div>
+
+            <div class="mt-6" id="topping-container">
+                <label class="font-bold text-xs uppercase tracking-wider text-brand-dark block mb-3 flex items-center gap-1.5"><i class="ph-fill ph-plus-circle text-brand-leaf text-base"></i> Tambahan Topping</label>
+                <div id="addons-container" class="space-y-3"></div>
+            </div>
+
+            <div class="mt-6">
+                <label class="font-bold text-xs uppercase tracking-wider text-brand-dark block mb-2">Catatan Khusus <span class="text-gray-400 font-normal normal-case">(Opsional)</span></label>
+                <textarea id="modal-note" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-xs font-medium focus:ring-2 focus:ring-brand-rose outline-none transition-all resize-none shadow-inner" placeholder="Tuliskan jika ada pantangan..."></textarea>
+            </div>
+
+            <div class="mt-6 flex items-center justify-between bg-white shadow-[0_5px_20px_rgba(0,0,0,0.04)] p-4 rounded-2xl border border-gray-100 mb-6">
+                <div>
+                    <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">Subtotal Item</p>
+                    <p id="modal-price-display" class="font-serif font-extrabold text-brand-terracotta text-2xl">Rp 0</p>
+                </div>
+                <div class="flex items-center gap-4 bg-gray-50 p-1.5 rounded-2xl shadow-inner border border-gray-100">
+                    <button onclick="window.App.menu.changeQty(-1)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white text-gray-600 hover:text-brand-dark shadow-sm transition-colors font-bold active:scale-95"><i class="ph-bold ph-minus text-sm"></i></button>
+                    <span id="modal-qty" class="w-6 text-center font-extrabold text-brand-dark text-xl">1</span>
+                    <button onclick="window.App.menu.changeQty(1)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-brand-rose text-white shadow-md active:scale-95 transition-transform"><i class="ph-bold ph-plus text-sm"></i></button>
+                </div>
+            </div>
+        </div>
+        <!-- Footer Add To Cart -->
+        <div class="p-4 glass-panel rounded-t-[1.5rem] shrink-0 border-t border-gray-100 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] bg-white modal-content" id="item-modal-footer" style="z-index: 52;">
+            <button onclick="window.App.cart.add()" class="w-full bg-brand-dark text-pastel-peach font-bold py-4 rounded-2xl transition-all hover:bg-black active:scale-[0.98] shadow-xl shadow-brand-dark/20 flex justify-center items-center gap-2 text-sm uppercase tracking-wide">
+                <i class="ph-bold ph-bag-simple text-xl"></i> Masukkan Keranjang
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 2: CART REVIEW -->
+    <div id="cart-modal" class="fixed inset-y-0 right-0 w-full max-w-md bg-white slide-panel flex flex-col shadow-2xl border-l border-gray-100 z-[60]">
+        <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-white z-10 shadow-sm cursor-grab active:cursor-grabbing" id="cart-modal-handle">
+            <div class="flex items-center gap-2">
+                <div class="w-1.5 h-6 bg-gray-300 rounded-full mr-2"></div>
+                <h2 class="font-serif font-bold text-xl text-brand-dark flex items-center gap-2"><i class="ph-fill ph-shopping-bag text-brand-rose"></i> Keranjangmu</h2>
+            </div>
+            <button onclick="window.App.ui.modals.cart.closePanel()" class="w-8 h-8 flex items-center justify-center bg-gray-50 rounded-full text-gray-500 hover:bg-gray-200 transition-colors"><i class="ph-bold ph-x text-sm"></i></button>
+        </div>
+        <div id="cart-items-container" class="flex-grow p-5 overflow-y-auto no-scrollbar space-y-4 bg-gray-50"></div>
+        <div class="p-5 bg-white border-t border-gray-100 shadow-[0_-5px_15px_rgba(0,0,0,0.02)]">
+            <div class="flex justify-between items-center mb-4 px-1">
+                <span class="text-sm font-bold text-gray-600 uppercase tracking-wider">Total Harga</span>
+                <span id="cart-modal-total" class="text-2xl font-serif font-extrabold text-brand-terracotta">Rp 0</span>
+            </div>
+            <button onclick="window.App.checkout.proceedToCheckout()" class="w-full bg-brand-dark text-white font-bold py-4.5 rounded-2xl transition-all shadow-lg active:scale-[0.98] flex justify-center items-center gap-2 uppercase tracking-wide text-sm">
+                Lanjut Isi Data <i class="ph-bold ph-arrow-right text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 3: CHECKOUT FORM -->
+    <div id="checkout-modal" class="fixed inset-y-0 right-0 w-full max-w-md bg-white slide-panel flex flex-col shadow-2xl border-l border-gray-100 z-[60]">
+        <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-white z-10 shadow-sm cursor-grab active:cursor-grabbing" id="checkout-modal-handle">
+            <button onclick="window.App.ui.modals.checkout.back()" class="w-8 h-8 flex items-center justify-center bg-gray-50 rounded-full text-gray-500 hover:bg-gray-200 transition-colors"><i class="ph-bold ph-arrow-left text-sm"></i></button>
+            <h2 class="font-serif font-bold text-xl text-brand-dark">Data Pengiriman</h2>
+            <div class="w-1.5 h-6 bg-gray-300 rounded-full ml-4"></div>
+        </div>
+        <div class="flex-grow p-6 overflow-y-auto no-scrollbar bg-white">
+            <div class="bg-pastel-peach/30 border border-brand-rose/20 rounded-xl p-3 flex items-start gap-3 mb-6 shadow-sm">
+                <i class="ph-fill ph-shield-check text-brand-rose text-xl mt-0.5"></i>
+                <p class="text-[10px] text-brand-dark font-medium leading-relaxed">Data Anda aman terenkripsi. Kami hanya menggunakannya untuk keperluan pesanan.</p>
+            </div>
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-600 mb-1.5 ml-1 uppercase tracking-wider">Nama Lengkap <span class="text-brand-rose">*</span></label>
+                    <div class="relative">
+                        <i class="ph-fill ph-user absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                        <input type="text" id="cust-name" class="w-full bg-gray-50 border border-gray-200 rounded-2xl pl-11 pr-4 py-4 text-sm font-medium outline-none focus:border-brand-rose focus:ring-1 focus:ring-brand-rose transition-all shadow-inner" placeholder="Sesuai KTP/Panggilan">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-600 mb-1.5 ml-1 uppercase tracking-wider">Nomor WhatsApp <span class="text-brand-rose">*</span></label>
+                    <div class="relative">
+                        <i class="ph-fill ph-whatsapp-logo absolute left-4 top-1/2 transform -translate-y-1/2 text-green-500 text-lg"></i>
+                        <input type="tel" id="cust-phone" class="w-full bg-gray-50 border border-gray-200 rounded-2xl pl-11 pr-4 py-4 text-sm font-medium outline-none focus:border-brand-rose focus:ring-1 focus:ring-brand-rose transition-all shadow-inner" placeholder="Contoh: 08123456789">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-600 mb-3 ml-1 uppercase tracking-wider">Metode Penerimaan <span class="text-brand-rose">*</span></label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="relative flex flex-col items-center justify-center p-4 bg-white border-2 border-gray-100 rounded-2xl cursor-pointer has-[:checked]:border-brand-rose has-[:checked]:bg-pastel-blush group shadow-sm transition-all">
+                            <input type="radio" name="orderMethod" value="delivery" class="hidden" checked onchange="window.App.checkout.toggleAddress()">
+                            <i class="ph-fill ph-moped text-3xl mb-2 text-gray-400 group-has-[:checked]:text-brand-rose transition-colors"></i>
+                            <span class="text-xs font-bold text-gray-500 group-has-[:checked]:text-brand-dark">Diantar Kurir</span>
                         </label>
-                        <span class="bg-gradient-to-r from-brand-orange to-brand-terracotta text-white text-xs font-extrabold px-3 py-1 rounded-full shadow-sm animate-bounce-slight">Lv <span id="modal-level-display">1</span></span>
-                    </div>
-                    
-                    <div class="pt-3 pb-2 relative px-2">
-                        <input type="range" id="modal-level-slider" min="1" max="10" value="1" oninput="updateModalPrice(event)">
-                        <div class="flex justify-between text-[10px] font-bold text-brand-terracotta mt-3">
-                            <span>Lv 1</span>
-                            <span>Lv 5</span>
-                            <span>Lv 10</span>
-                        </div>
+                        <label class="relative flex flex-col items-center justify-center p-4 bg-white border-2 border-gray-100 rounded-2xl cursor-pointer has-[:checked]:border-brand-rose has-[:checked]:bg-pastel-blush group shadow-sm transition-all">
+                            <input type="radio" name="orderMethod" value="pickup" class="hidden" onchange="window.App.checkout.toggleAddress()">
+                            <i class="ph-fill ph-storefront text-3xl mb-2 text-gray-400 group-has-[:checked]:text-brand-rose transition-colors"></i>
+                            <span class="text-xs font-bold text-gray-500 group-has-[:checked]:text-brand-dark">Ambil di Warung</span>
+                        </label>
                     </div>
                 </div>
-
-                <div class="mt-6">
-                    <label class="font-bold text-xs uppercase tracking-wider text-brand-dark block mb-2">Catatan Khusus <span class="text-gray-400 font-normal normal-case">(Opsional)</span></label>
-                    <input type="text" id="modal-note" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-xs focus:ring-2 focus:ring-brand-orange focus:border-brand-orange focus:bg-white transition-all outline-none" placeholder="Cth: Ekstra kuah, jangan pakai bawang, dll.">
-                </div>
-
-                <div class="mt-6 flex items-center justify-between bg-brand-light p-3 rounded-2xl border border-brand-peach/50">
-                    <div>
-                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">Harga Satuan</p>
-                        <p id="modal-price-display" class="font-serif font-bold text-brand-terracotta text-xl">Rp 0</p>
+                <div id="address-input-group" class="transition-all duration-300">
+                    <label class="block text-[11px] font-bold text-gray-600 mb-1.5 ml-1 uppercase tracking-wider">Alamat Lengkap <span class="text-brand-rose">*</span></label>
+                    <div class="relative">
+                        <i class="ph-fill ph-map-pin absolute left-4 top-4 text-gray-400 text-lg"></i>
+                        <textarea id="cust-address" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-2xl pl-11 pr-4 py-3.5 text-sm font-medium outline-none resize-none shadow-inner focus:border-brand-rose focus:ring-1 focus:ring-brand-rose transition-all" placeholder="Tulis RT/RW dan patokan..."></textarea>
                     </div>
-                    
-                    <div class="flex items-center gap-4 bg-white p-1.5 rounded-2xl shadow-sm border border-gray-100">
-                        <button onclick="changeModalQty(-1)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 text-brand-dark hover:bg-gray-100 transition-colors"><i class="ph-bold ph-minus text-base"></i></button>
-                        <span id="modal-qty" class="w-6 text-center font-extrabold text-brand-dark text-lg">1</span>
-                        <button onclick="changeModalQty(1)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-br from-brand-orange to-brand-terracotta text-white shadow-md hover:shadow-lg transition-all active:scale-95"><i class="ph-bold ph-plus text-base"></i></button>
+                </div>
+                <div id="pickup-info-group" class="hidden">
+                    <div class="bg-gradient-to-br from-pastel-peach/50 to-pastel-blush rounded-2xl p-5 border border-brand-rose/20 shadow-sm relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-brand-rose opacity-5"><i class="ph-fill ph-storefront text-8xl"></i></div>
+                        <h4 class="text-[11px] font-bold text-brand-dark mb-1.5 flex items-center gap-1.5 uppercase tracking-wider"><i class="ph-fill ph-map-pin-line text-brand-terracotta text-base"></i> Dapur Mama El</h4>
+                        <p class="text-[11px] leading-relaxed text-brand-dark/80 font-bold mb-4">DESA BATUNYANA RT 03 / RW 01<br>RUMAH NOMOR 9, KEC. BOJONG</p>
                     </div>
                 </div>
             </div>
-            
-            <div class="absolute bottom-0 left-0 right-0 p-5 bg-white/95 backdrop-blur-md border-t border-gray-100 rounded-t-3xl">
-                <button onclick="addToCart(event)" class="w-full bg-brand-dark text-brand-peach font-bold py-4 rounded-2xl transition-all hover:bg-black active:scale-[0.98] shadow-xl shadow-brand-dark/30 flex justify-center items-center gap-2 text-sm">
-                    <i class="ph-bold ph-plus-circle text-lg"></i> Tambahkan ke Pesanan
+        </div>
+        <div class="p-5 bg-white border-t border-gray-100 shadow-[0_-5px_15px_rgba(0,0,0,0.02)] z-20">
+            <button onclick="window.App.checkout.validate()" class="w-full bg-brand-dark text-pastel-peach font-bold py-4.5 rounded-2xl transition-all shadow-xl active:scale-[0.98] flex justify-center items-center gap-2 uppercase tracking-wide text-sm">
+                Cek Struk Pesanan <i class="ph-bold ph-receipt text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 4: DIGITAL RECEIPT -->
+    <div id="receipt-modal" class="fixed inset-y-0 right-0 w-full max-w-md bg-white slide-panel flex flex-col shadow-2xl z-[60]">
+        <div class="p-5 flex justify-between items-center bg-brand-dark text-pastel-peach z-10 shadow-md cursor-grab active:cursor-grabbing" id="receipt-modal-handle">
+            <button onclick="window.App.ui.modals.receipt.back()" class="w-8 h-8 flex items-center justify-center bg-white/10 rounded-full hover:bg-white/20 transition-colors"><i class="ph-bold ph-arrow-left text-sm"></i></button>
+            <h2 class="font-serif font-bold text-lg tracking-wider">STRUK DIGITAL</h2>
+            <div class="w-1.5 h-6 bg-white/30 rounded-full ml-4"></div>
+        </div>
+        <div class="flex-grow bg-[#F0ECE9] p-5 overflow-y-auto no-scrollbar relative flex flex-col items-center">
+            <div class="bg-white w-full max-w-[320px] rounded-sm shadow-xl relative pb-8 mt-2">
+                <div class="absolute -top-1 left-0 right-0 h-2 bg-[radial-gradient(circle,transparent_4px,#fff_4px)] bg-[length:12px_10px] rotate-180"></div>
+                <div class="p-6 pt-8">
+                    <div class="text-center border-b-2 border-dashed border-gray-300 pb-4 mb-5">
+                        <h3 class="font-serif font-extrabold text-2xl text-brand-dark mb-0.5 tracking-tight">DAPUR MAMA EL</h3>
+                        <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Spesialis Mie Jebew</p>
+                        <p class="text-[9px] text-gray-400 mt-2 font-mono" id="receipt-date">Date</p>
+                    </div>
+                    <div class="text-[11px] text-gray-700 mb-5 space-y-1.5 font-mono">
+                        <div class="flex"><span class="w-16">NAMA</span><span>: <span id="rec-name" class="font-bold text-brand-dark"></span></span></div>
+                        <div class="flex"><span class="w-16">WA</span><span>: <span id="rec-phone"></span></span></div>
+                        <div class="flex"><span class="w-16">TIPE</span><span>: <span id="rec-method" class="font-bold"></span></span></div>
+                        <div class="flex" id="rec-address-row"><span class="w-16 shrink-0">ALAMAT</span><span class="line-clamp-3">: <span id="rec-address"></span></span></div>
+                    </div>
+                    <div class="border-b-2 border-dashed border-gray-300 pb-4 mb-5">
+                        <table class="w-full text-[10px] font-mono">
+                            <thead><tr class="text-left text-gray-400 border-b border-gray-200"><th class="pb-1.5 font-normal w-2/3">ITEM</th><th class="pb-1.5 font-normal text-center">QTY</th><th class="pb-1.5 font-normal text-right">SUB</th></tr></thead>
+                            <tbody id="receipt-items" class="text-brand-dark align-top"></tbody>
+                        </table>
+                    </div>
+                    <div class="flex justify-between items-end mb-2">
+                        <span class="text-[11px] font-bold text-gray-500 uppercase tracking-widest font-mono">TOTAL TAGIHAN</span>
+                        <span class="text-2xl font-bold text-brand-dark font-mono tracking-tight" id="receipt-grand-total">Rp 0</span>
+                    </div>
+                    <p class="text-[9px] text-right text-brand-terracotta italic mt-2 mb-6">* Belum termasuk Ongkir</p>
+                </div>
+                <div class="absolute -bottom-1 left-0 right-0 h-2 bg-[radial-gradient(circle,transparent_4px,#fff_4px)] bg-[length:12px_10px]"></div>
+            </div>
+        </div>
+        <div class="p-5 bg-white border-t border-gray-200 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-20">
+            <button onclick="window.App.security.triggerAntiSpam()" class="w-full bg-[#25D366] text-white font-bold py-4.5 rounded-2xl transition-all shadow-lg hover:bg-[#20bd5a] active:scale-[0.98] flex justify-center items-center gap-2 uppercase tracking-wide text-sm">
+                <i class="ph-fill ph-whatsapp-logo text-2xl"></i> Kirim ke WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 5: CAPTCHA ANTI-SPAM (OVERLAY) -->
+    <div id="antispam-modal" class="fixed inset-0 bg-brand-dark/80 backdrop-blur-md modal-overlay flex items-center justify-center p-4 z-[80]">
+        <div id="antispam-box" class="bg-white w-full max-w-sm rounded-[2rem] overflow-hidden shadow-2xl scale-panel flex flex-col">
+            <div class="bg-red-50 p-5 flex flex-col items-center border-b border-red-100 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 text-red-100"><i class="ph-fill ph-warning text-8xl"></i></div>
+                <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-sm text-red-500 mb-2 relative z-10"><i class="ph-fill ph-shield-check text-3xl"></i></div>
+                <h3 class="text-center font-serif font-bold text-brand-dark text-lg leading-tight relative z-10">VERIFIKASI KEAMANAN</h3>
+            </div>
+            <div class="p-5">
+                <div class="bg-pastel-sand rounded-xl p-4 mb-5 border border-gray-100 text-xs text-gray-600 leading-relaxed text-justify shadow-inner">
+                    <p class="mb-2">Untuk mencegah serangan bot dan pesanan fiktif, mohon selesaikan verifikasi ini kak 🙏.</p>
+                    <div class="bg-red-50 p-2 rounded-lg border border-red-100"><p class="text-red-700 font-bold text-[10px]">⚠️ Sanksi Hukum Berlaku untuk Pesanan Fiktif.</p></div>
+                </div>
+                <div class="mb-5 flex flex-col items-center bg-gray-50 p-3 rounded-xl border border-gray-200">
+                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Selesaikan Soal Berikut</p>
+                    <div class="flex items-center gap-3 w-full">
+                        <canvas id="security-captcha" width="120" height="40" class="shadow-sm border border-gray-300 bg-white shrink-0"></canvas>
+                        <input type="number" id="captcha-input" class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm font-bold text-center focus:ring-2 focus:ring-brand-rose outline-none" placeholder="Hasil?">
+                    </div>
+                </div>
+                <label class="agree-checkbox flex items-start gap-3 p-3 bg-pastel-mint border border-green-200 rounded-xl cursor-pointer mb-5 group transition-colors hover:bg-green-100 shadow-sm">
+                    <input type="checkbox" id="agree-spam-checkbox" class="hidden" onchange="window.App.security.toggleBtn()">
+                    <div class="w-5 h-5 shrink-0 rounded border-2 border-green-400 flex items-center justify-center bg-white mt-0.5"><svg class="w-3 h-3 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
+                    <span class="text-[10px] text-brand-dark font-bold leading-tight mt-0.5">Saya setuju ini bukan pesanan fiktif.</span>
+                </label>
+                <div class="flex gap-2">
+                    <button onclick="window.App.ui.modals.antiSpam.close()" class="w-1/3 bg-gray-100 text-gray-500 font-bold py-3 rounded-xl text-[10px] uppercase tracking-wider hover:bg-gray-200 transition-colors">Batal</button>
+                    <button id="btn-final-wa" onclick="window.App.checkout.executeWhatsApp()" class="w-2/3 bg-gray-300 text-white font-bold py-3 rounded-xl text-[11px] uppercase tracking-wider flex justify-center items-center gap-2 pointer-events-none shadow-sm transition-all"><i class="ph-bold ph-paper-plane-right text-sm"></i> Kirim WA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 6: SUCCESS & TERIMA KASIH -->
+    <div id="success-modal" class="fixed inset-0 bg-pastel-blush z-[90] flex flex-col items-center justify-center modal-overlay p-6 text-center">
+        <div class="absolute inset-0 overflow-hidden opacity-40 pointer-events-none">
+            <i class="ph-fill ph-flower-lotus text-brand-rose text-5xl absolute top-10 left-10 animate-float-1"></i>
+            <i class="ph-fill ph-flower-tulip text-brand-terracotta text-6xl absolute bottom-20 right-10 animate-float-2"></i>
+        </div>
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl relative z-10 w-full max-w-sm border border-white scale-panel" id="success-box">
+            <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner"><i class="ph-fill ph-check-circle text-5xl animate-pop" style="animation-delay: 0.2s;"></i></div>
+            <h2 class="text-2xl font-serif font-extrabold text-brand-dark mb-2">Terima Kasih! 🙏</h2>
+            <h3 class="text-sm font-bold text-brand-rose mb-4 uppercase tracking-widest" id="success-name">Kak Amar</h3>
+            <p class="text-xs text-gray-600 leading-relaxed font-medium mb-8 mt-4">Silakan tekan <strong>Kirim</strong> di WhatsApp dan tunggu balasan dari kami ya kak 🤗 Pesanan akan segera diracik!</p>
+            <button onclick="window.location.reload()" class="w-full bg-brand-dark text-pastel-peach font-bold py-4 rounded-2xl shadow-lg hover:bg-black transition-all text-xs uppercase tracking-widest">Kembali ke Menu Utama</button>
+        </div>
+    </div>
+
+    <!-- MODAL 7: CLOUD REVIEW FORM -->
+    <div id="add-review-modal" class="fixed inset-0 bg-brand-dark/80 backdrop-blur-md z-[80] modal-overlay flex items-center justify-center p-4" onclick="if(event.target === this) window.App.ui.modals.review.close()">
+        <div id="add-review-box" class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl scale-panel flex flex-col">
+            <h3 class="text-center font-serif font-bold text-brand-dark text-2xl mb-1">Ulasan Spesial ✨</h3>
+            <div class="space-y-4 mt-5">
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Nama Anda</label>
+                    <input type="text" id="review-name" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm font-medium focus:ring-2 focus:ring-brand-gold outline-none" placeholder="">
+                </div>
+                <div>
+                    <div class="flex justify-center gap-2 mb-2" id="star-rating-selector">
+                        <i class="ph-fill ph-star text-4xl text-gray-300 cursor-pointer transition-colors" data-rating="1"></i>
+                        <i class="ph-fill ph-star text-4xl text-gray-300 cursor-pointer transition-colors" data-rating="2"></i>
+                        <i class="ph-fill ph-star text-4xl text-gray-300 cursor-pointer transition-colors" data-rating="3"></i>
+                        <i class="ph-fill ph-star text-4xl text-gray-300 cursor-pointer transition-colors" data-rating="4"></i>
+                        <i class="ph-fill ph-star text-4xl text-gray-300 cursor-pointer transition-colors" data-rating="5"></i>
+                    </div>
+                    <input type="hidden" id="review-rating" value="0">
+                </div>
+                <div>
+                    <textarea id="review-text" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm font-medium focus:ring-2 focus:ring-brand-gold outline-none resize-none" placeholder="Ceritakan pengalaman makan Mie Jebew di sini..."></textarea>
+                </div>
+                <div class="flex gap-3 pt-3">
+                    <button onclick="window.App.ui.modals.review.close()" class="w-1/3 bg-gray-100 text-gray-500 font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider hover:bg-gray-200 transition-colors">Batal</button>
+                    <button onclick="window.App.reviews.submit()" id="btn-submit-review" class="w-2/3 bg-brand-dark text-brand-gold font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider flex justify-center items-center gap-2 hover:bg-black transition-colors shadow-lg shadow-brand-dark/20"><i class="ph-bold ph-paper-plane-right"></i> Kirim</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 8: ADMIN VAULT CONFIG -->
+    <div id="admin-modal" class="fixed inset-0 bg-brand-dark/80 backdrop-blur-md z-[90] modal-overlay flex items-center justify-center p-4">
+        <div id="admin-box" class="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl scale-panel flex flex-col">
+            <div class="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
+                <div class="w-12 h-12 bg-brand-rose/10 text-brand-rose rounded-full flex items-center justify-center"><i class="ph-fill ph-lock-key text-2xl"></i></div>
+                <div>
+                    <h3 class="font-serif font-extrabold text-xl text-brand-dark">Sistem Admin</h3>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Dapur Mama El</p>
+                </div>
+            </div>
+            <input type="password" id="admin-code-input" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm font-bold text-center focus:ring-2 focus:ring-brand-rose outline-none mb-5" placeholder="Masukkan Kunci Rahasia">
+            <div class="flex gap-3">
+                <button onclick="window.App.ui.modals.admin.close()" class="w-1/3 bg-gray-100 text-gray-500 font-bold py-3.5 rounded-xl text-[10px] uppercase tracking-wider hover:bg-gray-200 transition-colors">Batal</button>
+                <button onclick="window.App.store.verifyAdminCode()" class="w-2/3 bg-brand-dark text-brand-gold font-bold py-3.5 rounded-xl text-[11px] uppercase tracking-wider shadow-md active:scale-95 transition-transform flex justify-center gap-2 hover:bg-black">
+                    <i class="ph-bold ph-vault"></i> Buka Akses
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Script Utama & Animasi Partikel -->
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-container" class="fixed top-10 left-1/2 transform -translate-x-1/2 z-[110] flex flex-col gap-2 pointer-events-none w-11/12 max-w-sm"></div>
+
+    <!-- 
+        ========================================================================
+        ENTERPRISE JAVASCRIPT ARCHITECTURE
+        Strict Mode, Safe Objects, DOM Validated
+        ========================================================================
+    -->
     <script>
-        // --- SISTEM PARTIKEL ---
-        const particleContainer = document.getElementById('particle-container');
+        "use strict";
 
-        // Partikel untuk Tombol (Confetti/Sparkles)
-        function triggerClickParticles(e) {
-            // Dapatkan posisi klik
-            const rect = e.target.getBoundingClientRect();
-            const x = e.clientX || rect.left + rect.width / 2;
-            const y = e.clientY || rect.top + rect.height / 2;
-            
-            const colors = ['#FF7E5F', '#D45D3A', '#FFDDC1', '#FFC107', '#4CAF50'];
-            
-            for (let i = 0; i < 15; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'absolute rounded-full pointer-events-none';
-                
-                // Variasi ukuran & warna
-                const size = Math.random() * 8 + 4;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.left = `${x}px`;
-                particle.style.top = `${y}px`;
-                
-                particleContainer.appendChild(particle);
-                
-                // Kalkulasi arah ledakan acak
-                const angle = Math.random() * Math.PI * 2;
-                const velocity = Math.random() * 60 + 30;
-                const tx = Math.cos(angle) * velocity;
-                const ty = Math.sin(angle) * velocity - (Math.random() * 40); // Cenderung ke atas
-                
-                // Animasi menggunakan Web Animations API
-                particle.animate([
-                    { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
-                    { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(0)`, opacity: 0 }
-                ], {
-                    duration: 600 + Math.random() * 400,
-                    easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
-                }).onfinish = () => particle.remove();
-            }
-        }
-
-        // Partikel untuk Slider (Percikan Api/Pedas)
-        let lastSliderParticleTime = 0;
-        function triggerSliderParticles(e) {
-            const now = Date.now();
-            if (now - lastSliderParticleTime < 50) return; // Batasi jumlah partikel agar tidak lag
-            lastSliderParticleTime = now;
-
-            const slider = e.target;
-            const rect = slider.getBoundingClientRect();
-            
-            // Perkiraan posisi thumb X berdasarkan value (0.0 sampai 1.0)
-            const percent = (slider.value - slider.min) / (slider.max - slider.min);
-            // Sesuaikan sedikit padding slider
-            const x = rect.left + (percent * (rect.width - 20)) + 10; 
-            const y = rect.top + (rect.height / 2);
-
-            // Kadang pakai emoji 🌶️, ✨, atau dot merah/orange
-            const particleTypes = ['🌶️', '✨', 'dot'];
-            const type = particleTypes[Math.floor(Math.random() * particleTypes.length)];
-            
-            const particle = document.createElement('div');
-            particle.className = 'absolute pointer-events-none font-bold text-xs flex items-center justify-center';
-            particle.style.left = `${x}px`;
-            particle.style.top = `${y}px`;
-            particle.style.zIndex = '110';
-            
-            if (type === 'dot') {
-                particle.style.width = '6px';
-                particle.style.height = '6px';
-                particle.style.borderRadius = '50%';
-                particle.style.backgroundColor = Math.random() > 0.5 ? '#FF7E5F' : '#FFC107';
-            } else {
-                particle.innerText = type;
-            }
-            
-            document.body.appendChild(particle);
-            
-            // Animasi melayang ke atas seperti asap/api
-            const tx = (Math.random() - 0.5) * 20;
-            const ty = -30 - Math.random() * 20;
-            
-            particle.animate([
-                { transform: 'translate(-50%, -50%) scale(0.5)', opacity: 1 },
-                { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1.5)`, opacity: 0 }
-            ], {
-                duration: 500 + Math.random() * 300,
-                easing: 'ease-out'
-            }).onfinish = () => particle.remove();
-        }
-
-
-        // --- DATABASE & LOGIKA UTAMA ---
-        const database = [
-            {
-                category: "Mie Jebew Spesial",
-                items: [
-                    { id: 'ori', name: 'Mie Jebew Original', desc: 'Mie kenyal dengan bumbu pedas gurih rahasia Dapur Mama El.', priceLow: 8000, priceHigh: 10000, img: 'https://cdn-icons-png.flaticon.com/512/3480/3480488.png' },
-                    { id: 'sos', name: 'Mie Jebew Sosis', desc: 'Mie pedas nikmat dipadukan dengan irisan sosis premium.', priceLow: 13000, priceHigh: 15000, img: 'https://cdn-icons-png.flaticon.com/512/3143/3143645.png' },
-                    { id: 'beef', name: 'Mie Jebew Beef', desc: 'Kemewahan mie pedas dengan topping beef slice gurih melimpah.', priceLow: 13000, priceHigh: 15000, img: 'https://cdn-icons-png.flaticon.com/512/3143/3143642.png' }
-                ]
-            },
-            {
-                category: "Paket Hemat (+ Es Teh)",
-                items: [
-                    { id: 'pk_ori', name: 'Paket Hemat Original', desc: 'Mie Jebew Original segar disajikan bersama Es Teh Manis dingin.', priceLow: 10000, priceHigh: 12000, img: 'https://cdn-icons-png.flaticon.com/512/3050/3050114.png' },
-                    { id: 'pk_sos', name: 'Paket Hemat Sosis', desc: 'Paket kenyang Mie Jebew Sosis lengkap dengan Es Teh Manis.', priceLow: 15000, priceHigh: 17000, img: 'https://cdn-icons-png.flaticon.com/512/3050/3050114.png' },
-                    { id: 'pk_beef', name: 'Paket Hemat Beef', desc: 'Pilihan premium Mie Jebew Beef ditambah segarnya Es Teh Manis.', priceLow: 15000, priceHigh: 17000, img: 'https://cdn-icons-png.flaticon.com/512/3050/3050114.png' }
+        // ---------------------------------------------------------------------
+        // CONFIGURATION & DATABASE
+        // ---------------------------------------------------------------------
+        const CONFIG = {
+            store: { WA: "6283841027652", name: "Dapur Mama El", openHr: 10, closeHr: 22, strictTime: false },
+            db: {
+                categories: [
+                    { id: "all", name: "Semua Menu", icon: "🍜" },
+                    { id: "mie_spesial", name: "Mie Jebew Spesial", icon: "🍜",
+                        items: [
+                            { id: 'ori', catId: 'mie_spesial', name: 'Mie Jebew Original', desc: 'Nikmati kelezatan mie jebew original dengan pangsit renyah dan timun segar.', priceLow: 8000, priceHigh: 10000, badge: 'Favorite', urgency: 'Banyak dipesan hari ini' },
+                            { id: 'sos', catId: 'mie_spesial', name: 'Mie Jebew Sosis', desc: 'Perpaduan sempurna mie jebew dengan topping sosis premium yang digoreng lezat.', priceLow: 13000, priceHigh: 15000, badge: 'Best Seller', urgency: 'Sisa beberapa porsi!' },
+                            { id: 'beef', catId: 'mie_spesial', name: 'Mie Jebew Beef', desc: 'Kemewahan mie jebew dengan topping beef slice (daging sapi) gurih melimpah.', priceLow: 13000, priceHigh: 15000, badge: 'Premium', urgency: null }
+                        ]
+                    },
+                    { id: "paket_hemat", name: "Spesial Paket (+ Es Teh)", icon: "🥤",
+                        items: [
+                            { id: 'pk_ori', catId: 'paket_hemat', name: 'Paket Hemat + Es Teh', desc: 'Mie Jebew Original yang lezat disajikan bersama kesegaran Es Teh Manis.', priceLow: 10000, priceHigh: 12000, badge: 'Hemat', urgency: null },
+                            { id: 'pk_sos', catId: 'paket_hemat', name: 'Paket Hemat Sosis + Es Teh', desc: 'Kenyang maksimal! Mie Jebew Sosis dipadukan dengan Es Teh Manis segar.', priceLow: 15000, priceHigh: 17000, badge: null, urgency: null },
+                            { id: 'pk_beef', catId: 'paket_hemat', name: 'Paket Hemat Beef + Es Teh', desc: 'Pilihan lengkap! Mie Jebew Beef premium ditambah kesegaran Es Teh Manis.', priceLow: 15000, priceHigh: 17000, badge: null, urgency: null }
+                        ]
+                    }
+                ],
+                addons: [
+                    { id: 'add_pangsit', name: 'Ekstra Kerupuk Pangsit', price: 2000 },
+                    { id: 'add_telur', name: 'Telur Ceplok Matang', price: 4000 },
+                    { id: 'add_sosis', name: 'Ekstra Sosis Goreng', price: 3000 }
                 ]
             }
-        ];
-
-        const WA_NUMBER = "6283841027652"; 
-        let cart = []; 
-        let currentActiveItem = null; 
-
-        // 1. Inisialisasi Menu
-        function initApp() {
-            const container = document.getElementById('menu-container');
-            let html = '';
-
-            database.forEach(cat => {
-                html += `
-                    <div class="mb-7">
-                        <div class="flex items-center gap-3 mb-4">
-                            <h2 class="text-sm font-bold uppercase tracking-widest text-brand-dark bg-brand-peach/30 px-3 py-1 rounded-lg border border-brand-peach">${cat.category}</h2>
-                            <div class="h-px bg-gradient-to-r from-brand-peach to-transparent flex-grow"></div>
-                        </div>
-                        <div class="space-y-4">
-                `;
-                
-                cat.items.forEach(item => {
-                    html += `
-                        <div class="bg-white rounded-2xl p-3 pl-4 shadow-sm border border-brand-peach/30 flex justify-between items-center group hover:border-brand-orange hover:shadow-md transition-all cursor-pointer relative overflow-hidden" onclick='openModal(${JSON.stringify(item)})'>
-                            <!-- Aksen Kiri -->
-                            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-brand-orange to-brand-terracotta opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                            
-                            <div class="pr-3 py-1">
-                                <h3 class="font-bold text-brand-dark text-[15px] mb-1 group-hover:text-brand-terracotta transition-colors">${item.name}</h3>
-                                <p class="text-[11px] text-gray-500 line-clamp-2 leading-relaxed mb-2.5 font-medium">${item.desc}</p>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-[13px] font-extrabold text-brand-terracotta">Rp ${item.priceLow.toLocaleString('id-ID')}</span>
-                                    <span class="text-[10px] text-gray-400 font-medium line-through">Rp ${item.priceHigh.toLocaleString('id-ID')}</span>
-                                </div>
-                            </div>
-                            
-                            <button class="shrink-0 bg-brand-light text-brand-terracotta border border-brand-peach w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-brand-orange group-hover:to-brand-terracotta group-hover:text-white group-hover:border-transparent transition-all shadow-sm">
-                                <i class="ph-bold ph-plus text-base"></i>
-                            </button>
-                        </div>
-                    `;
-                });
-                html += `</div></div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        // 2. Logika Modal
-        function openModal(item) {
-            currentActiveItem = item;
-            
-            document.getElementById('modal-level-slider').value = 1;
-            document.getElementById('modal-qty').innerText = 1;
-            document.getElementById('modal-note').value = '';
-            
-            document.getElementById('modal-item-name').innerText = item.name;
-            document.getElementById('modal-item-desc').innerText = item.desc;
-            updateModalPrice(); // Tanpa event supaya tidak keluar partikel saat pertama buka
-
-            const backdrop = document.getElementById('modal-backdrop');
-            const modal = document.getElementById('item-modal');
-            
-            backdrop.classList.remove('hidden');
-            modal.classList.remove('hidden');
-            
-            setTimeout(() => {
-                backdrop.classList.remove('opacity-0');
-                modal.classList.add('modal-enter-active');
-            }, 10);
-        }
-
-        function closeModal() {
-            const backdrop = document.getElementById('modal-backdrop');
-            const modal = document.getElementById('item-modal');
-            
-            backdrop.classList.add('opacity-0');
-            modal.classList.remove('modal-enter-active');
-            
-            setTimeout(() => {
-                backdrop.classList.add('hidden');
-                modal.classList.add('hidden');
-                currentActiveItem = null;
-            }, 500); 
-        }
-
-        function updateModalPrice(e = null) {
-            const level = parseInt(document.getElementById('modal-level-slider').value);
-            document.getElementById('modal-level-display').innerText = level;
-            const price = (level <= 5) ? currentActiveItem.priceLow : currentActiveItem.priceHigh;
-            document.getElementById('modal-price-display').innerText = `Rp ${price.toLocaleString('id-ID')}`;
-            
-            // Trigger partikel jika diubah secara manual (ada event)
-            if(e) triggerSliderParticles(e);
-        }
-
-        function changeModalQty(change) {
-            let currentQty = parseInt(document.getElementById('modal-qty').innerText);
-            if (currentQty + change >= 1) {
-                document.getElementById('modal-qty').innerText = currentQty + change;
-            }
-        }
-
-        // 3. Logika Keranjang
-        function addToCart(e) {
-            triggerClickParticles(e); // Panggil efek partikel ledakan
-            
-            const level = parseInt(document.getElementById('modal-level-slider').value);
-            const qty = parseInt(document.getElementById('modal-qty').innerText);
-            const note = document.getElementById('modal-note').value.trim();
-            const price = (level <= 5) ? currentActiveItem.priceLow : currentActiveItem.priceHigh;
-
-            cart.push({
-                cartId: 'item_' + Date.now(),
-                name: currentActiveItem.name,
-                level: level,
-                price: price,
-                qty: qty,
-                note: note
-            });
-
-            closeModal();
-            renderCart();
-        }
-
-        function removeFromCart(cartId) {
-            cart = cart.filter(item => item.cartId !== cartId);
-            renderCart();
-        }
-
-        function renderCart() {
-            const cartSection = document.getElementById('cart-section');
-            const cartItemsContainer = document.getElementById('cart-items');
-            
-            if (cart.length === 0) {
-                cartSection.classList.add('hidden');
-                updateCheckoutTotal();
-                return;
-            }
-
-            cartSection.classList.remove('hidden');
-            let html = '';
-
-            cart.forEach(item => {
-                const subtotal = item.price * item.qty;
-                html += `
-                    <div class="bg-white p-3.5 rounded-2xl border border-brand-peach/50 flex justify-between items-center gap-3 shadow-sm relative overflow-hidden">
-                        <!-- Indikator warna level pedas -->
-                        <div class="absolute left-0 top-0 bottom-0 w-1.5 ${item.level > 5 ? 'bg-brand-terracotta' : 'bg-brand-orange'}"></div>
-                        
-                        <div class="flex-grow pl-2">
-                            <h4 class="font-bold text-sm text-brand-dark mb-1">${item.name}</h4>
-                            <div class="flex items-center gap-2">
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md text-white ${item.level > 5 ? 'bg-brand-terracotta' : 'bg-brand-orange'}">Level ${item.level}</span>
-                                <span class="text-[11px] font-medium text-gray-500">${item.qty} x Rp ${item.price.toLocaleString('id-ID')}</span>
-                            </div>
-                            ${item.note ? `<p class="text-[10px] text-gray-400 mt-1.5 italic bg-gray-50 p-1 rounded"><i class="ph-fill ph-chat-teardrop-text text-brand-peach"></i> ${item.note}</p>` : ''}
-                        </div>
-                        <div class="flex flex-col items-end gap-2 shrink-0">
-                            <span class="font-extrabold text-[15px] text-brand-dark">Rp ${subtotal.toLocaleString('id-ID')}</span>
-                            <button onclick="removeFromCart('${item.cartId}')" class="text-xs text-red-400 hover:text-red-600 bg-red-50 hover:bg-red-100 px-2 py-1 rounded flex items-center gap-1 transition-colors font-semibold">
-                                <i class="ph-bold ph-trash"></i> Hapus
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            cartItemsContainer.innerHTML = html;
-            updateCheckoutTotal();
-        }
-
-        function updateCheckoutTotal() {
-            let total = 0;
-            let qty = 0;
-            cart.forEach(item => {
-                total += item.price * item.qty;
-                qty += item.qty;
-            });
-
-            document.getElementById('total-price-display').innerText = `Rp ${total.toLocaleString('id-ID')}`;
-            document.getElementById('total-qty-display').innerText = qty;
-
-            const btnSubmit = document.getElementById('btn-submit');
-            if (qty > 0) {
-                btnSubmit.classList.remove('opacity-50', 'cursor-not-allowed');
-                btnSubmit.classList.add('hover:-translate-y-0.5');
-            } else {
-                btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
-                btnSubmit.classList.remove('hover:-translate-y-0.5');
-            }
-        }
-
-        // 4. Logika Form Pengiriman
-        function toggleAddress() {
-            const orderType = document.querySelector('input[name="orderType"]:checked').value;
-            const addressContainer = document.getElementById('address-container');
-            const pickupInfo = document.getElementById('pickup-info');
-            
-            if (orderType === 'delivery') {
-                pickupInfo.classList.remove('fade-enter-active');
-                setTimeout(() => {
-                    pickupInfo.classList.add('hidden');
-                    addressContainer.classList.remove('hidden');
-                    void addressContainer.offsetWidth; 
-                    addressContainer.style.opacity = '1';
-                    addressContainer.style.transform = 'scaleY(1)';
-                }, 100);
-            } else {
-                addressContainer.style.opacity = '0';
-                addressContainer.style.transform = 'scaleY(0.9)';
-                setTimeout(() => {
-                    addressContainer.classList.add('hidden');
-                    pickupInfo.classList.remove('hidden');
-                    void pickupInfo.offsetWidth;
-                    pickupInfo.classList.add('fade-enter-active');
-                }, 300);
-            }
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('error-toast');
-            document.getElementById('error-msg-text').innerText = msg;
-            toast.classList.remove('opacity-0');
-            setTimeout(() => { toast.classList.add('opacity-0'); }, 3000);
-        }
-
-        // 5. Proses Output WhatsApp (Format Tepat Sesuai Request)
-        function processOrder(e) {
-            if (cart.length === 0) {
-                showToast("Pilih menu dulu yuk!");
-                return;
-            }
-
-            const name = document.getElementById('form-name').value.trim();
-            const orderType = document.querySelector('input[name="orderType"]:checked').value;
-            const address = document.getElementById('form-address').value.trim();
-
-            if (!name) {
-                showToast("Nama lengkap belum diisi");
-                document.getElementById('form-name').focus();
-                return;
-            }
-
-            if (orderType === 'delivery' && !address) {
-                showToast("Alamat pengiriman belum diisi");
-                document.getElementById('form-address').focus();
-                return;
-            }
-
-            // Panggil partikel saat berhasil checkout
-            triggerClickParticles(e);
-
-            let totalPrice = 0;
-            cart.forEach(item => totalPrice += item.price * item.qty);
-
-            let waText = `Halo Kak! Aku mau pesen 🚀\n\n`;
-            
-            // Data Pemesan
-            waText += `👤 *DATA PEMESAN*\n`;
-            waText += `Nama: ${name}\n`;
-            waText += `Metode: ${orderType === 'delivery' ? '🛵 Diantar (Delivery)' : '🏬 Ambil Sendiri (Pickup)'}\n`;
-            if (orderType === 'delivery') {
-                waText += `Alamat: ${address}\n`;
-            } else {
-                 waText += `Alamat: Batunyana\n`;
-            }
-            waText += `\n`;
-
-            // Detail Pesanan
-            waText += `🛍️ *DETAIL PESANAN*\n`;
-            cart.forEach((item, index) => {
-                const sub = item.price * item.qty;
-                waText += `${index + 1}. *${item.name} - Level ${item.level}*\n`;
-                waText += `   > *${item.qty} porsi* x Rp ${item.price.toLocaleString('id-ID')} = Rp ${sub.toLocaleString('id-ID')}\n`;
-                if (item.note) {
-                    waText += `   > _Catatan: ${item.note}_\n`;
-                }
-            });
-            waText += `\n`;
-
-            // Total
-            waText += `💰 *TOTAL HARGA: Rp ${totalPrice.toLocaleString('id-ID')}*\n`;
-            if (orderType === 'delivery') {
-                waText += `_(Belum termasuk ongkos kirim)_\n`;
-            }
-            
-            waText += `\nMohon segera diproses ya Kak, Terima kasih! ✨`;
-
-            // Buka WhatsApp (Beri jeda sedikit agar animasi ledakan terlihat)
-            setTimeout(() => {
-                const encodedText = encodeURIComponent(waText);
-                const waLink = `https://wa.me/${WA_NUMBER}?text=${encodedText}`;
-                window.open(waLink, '_blank');
-            }, 500);
-        }
-
-        window.onload = () => {
-            initApp();
-            document.getElementById('address-container').style.opacity = '1';
-            document.getElementById('address-container').style.transform = 'scaleY(1)';
         };
+
+        const STATE = {
+            cart: [], activeItem: null, reviews: [],
+            customer: { name: '', phone: '', method: 'delivery', address: '' },
+            loyalty: { trusted: false }, filter: 'all', captchaAnswer: 0,
+            isStoreOpen: true
+        };
+
+        // ---------------------------------------------------------------------
+        // GESTURE ENGINE (Native Feel Swipe)
+        // ---------------------------------------------------------------------
+        class GestureEngine {
+            constructor(elementId, options) {
+                this.el = document.getElementById(elementId);
+                this.options = options || {};
+                if(!this.el) return;
+                this.startX = 0; this.startY = 0;
+                
+                this.el.addEventListener('touchstart', this.onStart.bind(this), {passive: true});
+                this.el.addEventListener('touchend', this.onEnd.bind(this), {passive: true});
+            }
+            onStart(e) {
+                this.startX = e.changedTouches[0].screenX;
+                this.startY = e.changedTouches[0].screenY;
+            }
+            onEnd(e) {
+                let dx = e.changedTouches[0].screenX - this.startX;
+                let dy = e.changedTouches[0].screenY - this.startY;
+                
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    if (dx > 60 && this.options.onSwipeRight) this.options.onSwipeRight();
+                    if (dx < -60 && this.options.onSwipeLeft) this.options.onSwipeLeft();
+                } else {
+                    const scroller = this.el.querySelector('.overflow-y-auto');
+                    if (scroller && scroller.scrollTop > 0) return; 
+                    
+                    if (dy > 60 && this.options.onSwipeDown) this.options.onSwipeDown();
+                    if (dy < -60 && this.options.onSwipeUp) this.options.onSwipeUp();
+                }
+            }
+        }
+
+        // ---------------------------------------------------------------------
+        // MAIN APPLICATION CONTROLLER
+        // ---------------------------------------------------------------------
+        const App = {
+            fbDb: null, fbAppId: null,
+
+            // --- 1. BOOTSTRAP & INIT ---
+            bootstrap: function() {
+                try {
+                    const doorLock = document.getElementById('door-lock');
+                    const doorContent = document.getElementById('door-content');
+                    const doorLeft = document.getElementById('door-left');
+                    const doorRight = document.getElementById('door-right');
+                    const splashDoorContainer = document.getElementById('splash-door-container');
+                    const greetingBox = document.getElementById('greeting-box');
+
+                    if(doorLock) { doorLock.style.transform = 'translate(-50%, -50%) scale(0)'; doorLock.style.opacity = '0'; }
+                    if(doorContent) doorContent.style.opacity = '0';
+                    if(doorLeft) doorLeft.classList.add('door-left-open');
+                    if(doorRight) doorRight.classList.add('door-right-open');
+
+                    this.audio.playBGM();
+                    this.sakura.init();
+
+                    setTimeout(() => {
+                        if(splashDoorContainer) splashDoorContainer.style.display = 'none';
+                        if(greetingBox) {
+                            greetingBox.classList.remove('opacity-0');
+                            greetingBox.classList.add('animate-slide-up');
+                        }
+                    }, 1400);
+                } catch(e) { console.error("Bootstrap Error", e); }
+            },
+
+            init: async function() {
+                this.loyalty.load();
+                this.menu.render();
+                this.menu.renderAddons();
+                this.cart.updateUI();
+                
+                // Initialize Gestures
+                this.swipe.init();
+                this.gestures.initModalGestures();
+
+                // Init Star Rating System
+                const starSel = document.getElementById('star-rating-selector');
+                if(starSel) {
+                    starSel.addEventListener('click', (e) => {
+                        if(e.target.tagName === 'I') {
+                            const rating = parseInt(e.target.getAttribute('data-rating'));
+                            document.getElementById('review-rating').value = rating;
+                            const stars = starSel.children;
+                            for(let i=0; i<5; i++) {
+                                if(i < rating) { stars[i].classList.remove('text-gray-300'); stars[i].classList.add('text-brand-gold'); } 
+                                else { stars[i].classList.add('text-gray-300'); stars[i].classList.remove('text-brand-gold'); }
+                            }
+                        }
+                    });
+                }
+
+                // Setup Firebase
+                try {
+                    if (typeof __firebase_config === 'undefined') { this.store.fallbackCheck(); this.reviews.loadDummy(); return; }
+                    const cfg = JSON.parse(__firebase_config);
+                    const app = window.firebaseModules.initializeApp(cfg);
+                    const auth = window.firebaseModules.getAuth(app);
+                    this.fbDb = window.firebaseModules.getFirestore(app);
+                    this.fbAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await window.firebaseModules.signInWithCustomToken(auth, __initial_auth_token);
+                    } else { await window.firebaseModules.signInAnonymously(auth); }
+
+                    window.firebaseModules.onAuthStateChanged(auth, (user) => { 
+                        if (user) { this.store.listenStatus(); this.reviews.fetchRealtime(); }
+                    });
+                } catch (e) { 
+                    console.error("Init Error", e); 
+                    this.store.fallbackCheck(); this.reviews.loadDummy(); 
+                }
+            },
+
+            // --- 2. STORE GLOBAL STATUS & ADMIN ---
+            store: {
+                listenStatus: function() {
+                    if(!window.App.fbDb) { this.fallbackCheck(); return; }
+                    const docRef = window.firebaseModules.doc(window.App.fbDb, 'artifacts', window.App.fbAppId, 'public', 'data', 'config', 'store');
+                    window.firebaseModules.onSnapshot(docRef, (docSnap) => {
+                        if (docSnap.exists()) {
+                            STATE.isStoreOpen = docSnap.data().isOpen;
+                            window.App.ui.setStatus(STATE.isStoreOpen, STATE.isStoreOpen ? "TOKO BUKA" : "TOKO TUTUP");
+                        } else { this.fallbackCheck(); }
+                    }, err => { this.fallbackCheck(); });
+                },
+                fallbackCheck: function() {
+                    if (!CONFIG.store.strictTime) { window.App.ui.setStatus(true, "TOKO BUKA"); return; }
+                    const hr = new Date().getHours();
+                    if (hr >= CONFIG.store.openHr && hr < CONFIG.store.closeHr) { STATE.isStoreOpen = true; window.App.ui.setStatus(true, "TOKO BUKA"); } 
+                    else { STATE.isStoreOpen = false; window.App.ui.setStatus(false, `TUTUP (${CONFIG.store.openHr}:00-${CONFIG.store.closeHr}:00)`); }
+                },
+                verifyAdminCode: function() {
+                    const inp = document.getElementById('admin-code-input');
+                    if(!inp) return;
+                    const code = inp.value;
+                    if(code === 'adesayangmasbuka') { this.setStatusGlobal(true); window.App.ui.modals.admin.close(); } 
+                    else if(code === 'adesayangmastutup') { this.setStatusGlobal(false); window.App.ui.modals.admin.close(); } 
+                    else if(code) { window.App.ui.showToast("Kunci akses ditolak!", "error"); }
+                    inp.value = '';
+                },
+                setStatusGlobal: async function(isOpen) {
+                    if(!window.App.fbDb) {
+                        STATE.isStoreOpen = isOpen;
+                        window.App.ui.setStatus(isOpen, isOpen ? "TOKO BUKA" : "TOKO TUTUP");
+                        window.App.ui.showToast(`Offline: Toko ${isOpen ? 'dibuka' : 'ditutup'}`, "success");
+                        return;
+                    }
+                    try {
+                        const docRef = window.firebaseModules.doc(window.App.fbDb, 'artifacts', window.App.fbAppId, 'public', 'data', 'config', 'store');
+                        await window.firebaseModules.setDoc(docRef, { isOpen: isOpen }, { merge: true });
+                        window.App.ui.showToast(`Server: Toko ${isOpen ? 'dibuka' : 'ditutup'}`, "success");
+                    } catch(e) { window.App.ui.showToast("Gagal menyambung server", "error"); }
+                }
+            },
+
+            // --- 3. AUDIO ENGINE ---
+            audio: {
+                isPlaying: false, element: null,
+                playBGM: function() {
+                    try {
+                        this.element = document.getElementById('bg-music');
+                        if(this.element) {
+                            this.element.volume = 0.4;
+                            let playPromise = this.element.play();
+                            if (playPromise !== undefined) {
+                                playPromise.then(_ => {
+                                    this.isPlaying = true;
+                                    const mc = document.getElementById('music-controller');
+                                    if(mc) mc.classList.remove('hidden');
+                                }).catch(e => console.log("Audio prevented by browser."));
+                            }
+                        }
+                    } catch(e) {}
+                },
+                toggle: function() {
+                    if(!this.element) return;
+                    const icon = document.getElementById('music-icon');
+                    if (this.isPlaying) { 
+                        this.element.pause(); 
+                        if(icon) icon.className = "ph-fill ph-speaker-slash text-xl text-gray-400"; 
+                        this.isPlaying = false; 
+                    } else { 
+                        this.element.play(); 
+                        if(icon) icon.className = "ph-fill ph-speaker-high text-xl text-brand-rose"; 
+                        this.isPlaying = true; 
+                    }
+                }
+            },
+
+            // --- 4. SAKURA PHYSICS ENGINE ---
+            sakura: {
+                ctx: null, petals: [], width: 0, height: 0, animationId: null, windForce: 0,
+                init: function() {
+                    try {
+                        const canvas = document.getElementById('sakura-canvas');
+                        if(!canvas) return;
+                        this.ctx = canvas.getContext('2d');
+                        this.resize(canvas);
+                        window.addEventListener('resize', () => this.resize(canvas));
+                        for(let i=0; i<25; i++) {
+                            this.petals.push({
+                                x: Math.random() * this.width, y: Math.random() * this.height - this.height,
+                                s: Math.random() * 0.4 + 0.3, vx: Math.random() * 1.5 + 0.5, vy: Math.random() * 1.5 + 1.5,
+                                r: Math.random() * 360, vr: (Math.random() - 0.5) * 2
+                            });
+                        }
+                        this.animate();
+                    } catch(e) {}
+                },
+                resize: function(c) { this.width = window.innerWidth; this.height = window.innerHeight; c.width = this.width; c.height = this.height; },
+                triggerWind: function(force) { this.windForce = force; },
+                drawPetal: function(p) {
+                    this.ctx.save(); this.ctx.translate(p.x, p.y); this.ctx.rotate(p.r * Math.PI / 180); this.ctx.scale(p.s, p.s);
+                    this.ctx.beginPath(); this.ctx.moveTo(0, 0); this.ctx.bezierCurveTo(10, -15, 20, -5, 20, 0); this.ctx.bezierCurveTo(20, 5, 10, 15, 0, 0);
+                    let grd = this.ctx.createLinearGradient(0,-10,20,10);
+                    grd.addColorStop(0, "rgba(255, 192, 203, 0.8)"); grd.addColorStop(1, "rgba(255, 228, 225, 0.5)");
+                    this.ctx.fillStyle = grd; this.ctx.fill(); this.ctx.restore();
+                },
+                animate: function() {
+                    if(!this.ctx) return;
+                    this.ctx.clearRect(0, 0, this.width, this.height);
+                    this.windForce *= 0.95; 
+                    let naturalWind = Math.sin(Date.now() / 2000) * 0.5;
+                    let totalWind = naturalWind + this.windForce;
+
+                    this.petals.forEach(p => {
+                        p.x += p.vx + totalWind; p.y += p.vy; p.r += p.vr;
+                        if(p.y > this.height || p.x > this.width || p.x < -50) {
+                            p.y = -20; p.x = Math.random() * this.width;
+                            if(this.windForce > 5) p.x = -20; 
+                            if(this.windForce < -5) p.x = this.width + 20;
+                        }
+                        this.drawPetal(p);
+                    });
+                    this.animationId = requestAnimationFrame(() => this.animate());
+                }
+            },
+
+            // --- 5. MENU SWIPE LOGIC ---
+            swipe: {
+                init: function() {
+                    let touchstartX = 0; let touchendX = 0;
+                    const area = document.getElementById('swipe-menu-area');
+                    if(!area) return;
+                    area.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, {passive: true});
+                    area.addEventListener('touchend', e => { touchendX = e.changedTouches[0].screenX; this.handle(touchstartX, touchendX); }, {passive: true});
+                },
+                handle: function(startX, endX) {
+                    const threshold = 60; const tabs = ['all', 'mie_spesial', 'paket_hemat', 'minuman'];
+                    let cIdx = tabs.indexOf(STATE.filter);
+                    if (endX < startX - threshold && cIdx < tabs.length - 1) { window.App.sakura.triggerWind(-15); this.changeTab(tabs[cIdx + 1]); }
+                    if (endX > startX + threshold && cIdx > 0) { window.App.sakura.triggerWind(15); this.changeTab(tabs[cIdx - 1]); }
+                },
+                changeTab: function(tabId) { const btn = document.querySelector(`.tab-btn[data-target="${tabId}"]`); if(btn) window.App.menu.filter(tabId, btn); }
+            },
+
+            gestures: {
+                initModalGestures: function() {
+                    this.attachSwipeDown('item-modal', 'item-modal-handle', () => window.App.ui.modals.item.close());
+                    this.attachSwipeRight('cart-modal', 'cart-modal-handle', () => window.App.ui.modals.cart.closePanel());
+                    this.attachSwipeRight('checkout-modal', 'checkout-modal-handle', () => window.App.ui.modals.checkout.back());
+                    this.attachSwipeRight('receipt-modal', 'receipt-modal-handle', () => window.App.ui.modals.receipt.back());
+                },
+                attachSwipeDown: function(modalId, handleId, closeCallback) {
+                    const modal = document.getElementById(modalId); const handle = document.getElementById(handleId); const scrollArea = document.getElementById(modalId + '-scroll');
+                    if(!modal || !handle) return;
+                    let startY = 0, currentY = 0;
+                    handle.addEventListener('touchstart', e => { startY = e.touches[0].clientY; modal.classList.add('is-swiping'); }, {passive: true});
+                    handle.addEventListener('touchmove', e => {
+                        if (scrollArea && scrollArea.scrollTop > 0) return;
+                        currentY = e.touches[0].clientY; let dy = currentY - startY;
+                        if (dy > 0) { e.preventDefault(); modal.style.transform = `translateY(${dy}px)`; }
+                    }, {passive: false});
+                    handle.addEventListener('touchend', e => {
+                        modal.classList.remove('is-swiping'); let dy = currentY - startY; modal.style.transform = ''; 
+                        if (dy > 120 && currentY > 0) { closeCallback(); }
+                        currentY = 0; startY = 0;
+                    }, {passive: true});
+                },
+                attachSwipeRight: function(modalId, headerId, closeCallback) {
+                    const modal = document.getElementById(modalId); const header = document.getElementById(headerId);
+                    if(!modal || !header) return;
+                    let startX = 0, currentX = 0;
+                    header.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; modal.classList.add('is-swiping'); }, {passive: true});
+                    header.addEventListener('touchmove', (e) => {
+                        currentX = e.touches[0].clientX; let dx = currentX - startX;
+                        if (dx > 0) { e.preventDefault(); modal.style.transform = `translateX(${dx}px)`; }
+                    }, {passive: false});
+                    header.addEventListener('touchend', () => {
+                        modal.classList.remove('is-swiping'); let dx = currentX - startX; modal.style.transform = ''; 
+                        if (dx > 100) { closeCallback(); }
+                        currentX = 0; startX = 0;
+                    }, {passive: true});
+                }
+            },
+
+            // --- 6. LOYALTY SYSTEM ---
+            loyalty: {
+                load: function() {
+                    try {
+                        const savedName = localStorage.getItem('DapurMamaEl_CustName');
+                        const trusted = localStorage.getItem('DapurMamaEl_TrustedCustomer') === 'true';
+                        if (savedName) STATE.customer.name = savedName;
+                        STATE.loyalty.trusted = trusted;
+                    } catch(e) {}
+                },
+                save: function() {
+                    try {
+                        localStorage.setItem('DapurMamaEl_TrustedCustomer', 'true');
+                        localStorage.setItem('DapurMamaEl_CustName', STATE.customer.name);
+                    } catch(e) {}
+                }
+            },
+
+            // --- 7. SECURITY ---
+            security: {
+                generateCaptcha: function() {
+                    const canvas = document.getElementById('security-captcha');
+                    if(!canvas) return;
+                    const ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    const n1 = Math.floor(Math.random() * 9) + 1; const n2 = Math.floor(Math.random() * 9) + 1;
+                    STATE.captchaAnswer = n1 + n2;
+                    for(let i=0; i<30; i++) { ctx.beginPath(); ctx.moveTo(Math.random()*canvas.width, Math.random()*canvas.height); ctx.lineTo(Math.random()*canvas.width, Math.random()*canvas.height); ctx.strokeStyle = `rgba(0,0,0,0.${Math.floor(Math.random()*3)})`; ctx.stroke(); }
+                    ctx.font = 'bold 22px "Plus Jakarta Sans"'; ctx.fillStyle = '#D47A8C';
+                    ctx.setTransform(1, Math.random()*0.2 - 0.1, Math.random()*0.2 - 0.1, 1, 0, 0); 
+                    ctx.fillText(`${n1} + ${n2} = ?`, 20, 28); ctx.setTransform(1,0,0,1,0,0); 
+                    const inp = document.getElementById('captcha-input');
+                    if(inp) inp.value = '';
+                },
+                validate: function() { 
+                    const inp = document.getElementById('captcha-input');
+                    if(!inp) return false;
+                    return parseInt(inp.value) === STATE.captchaAnswer; 
+                },
+                triggerAntiSpam: function() {
+                    if (STATE.loyalty.trusted) { window.App.checkout.executeWhatsApp(); return; }
+                    this.generateCaptcha();
+                    const chk = document.getElementById('agree-spam-checkbox');
+                    if(chk) chk.checked = false; 
+                    this.toggleBtn();
+                    window.App.ui.modals.antiSpam.open();
+                },
+                toggleBtn: function() {
+                    const chk = document.getElementById('agree-spam-checkbox'); const btn = document.getElementById('btn-final-wa');
+                    if(!chk || !btn) return;
+                    if (chk.checked) { btn.className = "w-2/3 bg-[#25D366] text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider flex justify-center items-center gap-2 transition-all shadow-lg hover:bg-[#20bd5a] pointer-events-auto active:scale-95"; } 
+                    else { btn.className = "w-2/3 bg-gray-300 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider flex justify-center items-center gap-2 pointer-events-none shadow-sm"; }
+                }
+            },
+
+            // --- 8. MENU CONTROLLER ---
+            menu: {
+                filter: function(id, btnEl = null) {
+                    STATE.filter = id;
+                    const c = document.getElementById('menu-container'); 
+                    if(c) c.style.opacity = '0'; 
+                    if(!btnEl) btnEl = document.querySelector(`.tab-btn[data-target="${id}"]`);
+                    document.querySelectorAll('.tab-btn').forEach(el => { el.classList.remove('active', 'bg-brand-rose', 'text-white'); el.classList.add('bg-white'); });
+                    if(btnEl) { btnEl.classList.remove('bg-white'); btnEl.classList.add('active'); }
+                    setTimeout(() => { this.render(); if(c) c.style.opacity = '1'; }, 150);
+                },
+                render: function() {
+                    const c = document.getElementById('menu-container'); 
+                    if(!c) return;
+                    let html = '';
+                    CONFIG.db.categories.forEach(cat => {
+                        if(STATE.filter !== 'all' && cat.id !== STATE.filter) return;
+                        if(cat.id === 'all') return;
+
+                        html += `<div class="mb-8 relative animate-fade-in"><div class="flex items-center gap-3 mb-5 px-1"><span class="text-2xl drop-shadow-sm">${cat.icon}</span><h2 class="text-[13px] font-bold uppercase tracking-widest text-brand-dark bg-white px-3 py-1 rounded-lg shadow-sm border border-pastel-peach">${cat.name}</h2><div class="h-px bg-gradient-to-r from-pastel-peach to-transparent flex-grow"></div></div><div class="space-y-4">`;
+                        
+                        cat.items.forEach(i => {
+                            let bHtml = i.badge === 'Best Seller' ? `<div class="absolute -top-3 right-4 bg-gradient-to-r from-brand-rose to-brand-terracotta text-white text-[9px] font-extrabold px-3 py-1 rounded-md uppercase tracking-widest z-10 best-seller-glow shadow-md"><i class="ph-fill ph-fire text-white mr-0.5"></i> ${i.badge}</div>` : (i.badge ? `<div class="absolute -top-3 right-4 bg-brand-leaf text-white text-[9px] font-extrabold px-3 py-1 rounded-md uppercase tracking-widest z-10 shadow-sm">${i.badge}</div>` : '');
+                            let uHtml = i.urgency ? `<div class="mt-2 inline-flex items-center gap-1.5 bg-pastel-blush/60 px-2 py-1 rounded border border-brand-rose/20"><i class="ph-fill ph-trend-up text-brand-rose text-xs"></i><span class="text-[9px] font-bold text-brand-rose uppercase tracking-wider">${i.urgency}</span></div>` : '';
+                            const hasLvl = cat.id === 'mie_spesial' || cat.id === 'paket_hemat';
+                            
+                            html += `<div class="bg-white rounded-[1.5rem] p-4.5 shadow-[0_5px_15px_rgba(0,0,0,0.03)] border border-pastel-peach/40 flex justify-between items-center group hover:border-brand-rose hover:shadow-[0_10px_25px_rgba(212,122,140,0.15)] transition-all cursor-pointer relative" onclick='window.App.ui.modals.item.open(${JSON.stringify(i)}, ${hasLvl})'>${bHtml}<div class="absolute left-0 top-6 bottom-6 w-1.5 bg-gradient-to-b from-brand-rose to-brand-terracotta rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><div class="pr-3 py-1 flex-grow pl-2"><h3 class="font-bold text-brand-dark text-base mb-1 group-hover:text-brand-terracotta transition-colors font-serif tracking-wide">${i.name}</h3><p class="text-[11px] text-gray-500 line-clamp-2 leading-relaxed mb-2.5 font-medium">${i.desc}</p><div class="flex items-center gap-2"><span class="text-sm font-extrabold text-brand-dark">Rp ${i.priceLow.toLocaleString('id-ID')}</span>${i.priceHigh > i.priceLow ? `<span class="text-[10px] text-gray-400 font-medium line-through">Rp ${i.priceHigh.toLocaleString('id-ID')}</span>` : ''}</div>${uHtml}</div><button class="shrink-0 bg-pastel-sand text-brand-rose border border-pastel-peach w-11 h-11 rounded-full flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-brand-rose group-hover:to-brand-terracotta group-hover:text-white transition-all shadow-sm active:scale-95"><i class="ph-bold ph-plus text-lg"></i></button></div>`;
+                        });
+                        html += `</div></div>`;
+                    });
+                    c.innerHTML = html;
+                },
+                renderAddons: function() {
+                    const c = document.getElementById('addons-container');
+                    if(c) c.innerHTML = CONFIG.db.addons.map(a => `<label class="custom-checkbox flex items-center justify-between p-3.5 border border-gray-100 rounded-2xl cursor-pointer hover:bg-pastel-blush/30 transition-colors shadow-sm bg-white"><div class="flex items-center gap-3"><input type="checkbox" class="hidden addon-checkbox" value="${a.id}" data-price="${a.price}" data-name="${a.name}" onchange="window.App.menu.updateCalculations()"><div class="w-5 h-5 rounded border-2 border-gray-200 flex items-center justify-center transition-colors bg-gray-50 mt-0.5"><svg class="w-3 h-3 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="text-xs font-bold text-brand-dark">${a.name}</span></div><span class="text-[10px] font-extrabold text-brand-rose bg-pastel-blush px-2 py-1 rounded">+ Rp ${a.price.toLocaleString('id-ID')}</span></label>`).join('');
+                },
+                updateCalculations: function() {
+                    if (!STATE.activeItem) return;
+                    const lInp = document.getElementById('modal-level-slider'); const lvl = lInp ? parseInt(lInp.value) : 1;
+                    const lDisp = document.getElementById('modal-level-display'); if(lDisp) lDisp.innerText = lvl;
+                    let base = (lvl <= 5) ? STATE.activeItem.priceLow : STATE.activeItem.priceHigh;
+                    if(STATE.activeItem.priceLow === STATE.activeItem.priceHigh) base = STATE.activeItem.priceLow; 
+                    let add = 0; document.querySelectorAll('.addon-checkbox:checked').forEach(cb => add += parseInt(cb.getAttribute('data-price')));
+                    const pDisp = document.getElementById('modal-price-display'); if(pDisp) pDisp.innerText = `Rp ${(base + add).toLocaleString('id-ID')}`;
+                },
+                changeQty: function(chg) {
+                    const qEl = document.getElementById('modal-qty');
+                    if(!qEl) return;
+                    let q = parseInt(qEl.innerText);
+                    if (q + chg >= 1) qEl.innerText = q + chg; 
+                }
+            },
+
+            // --- 9. CART CONTROLLER ---
+            cart: {
+                add: function() {
+                    const lInp = document.getElementById('modal-level-slider');
+                    const lvl = lInp && !lInp.parentElement.parentElement.classList.contains('hidden') ? parseInt(lInp.value) : 0;
+                    const qEl = document.getElementById('modal-qty'); const qty = qEl ? parseInt(qEl.innerText) : 1;
+                    const nEl = document.getElementById('modal-note'); const note = nEl ? nEl.value.trim() : '';
+                    const base = (lvl > 0 && lvl <= 5) ? STATE.activeItem.priceLow : STATE.activeItem.priceHigh;
+                    
+                    const addons = []; let addPrice = 0;
+                    document.querySelectorAll('.addon-checkbox:checked').forEach(cb => {
+                        const p = parseInt(cb.getAttribute('data-price'));
+                        addons.push({ id: cb.value, name: cb.getAttribute('data-name'), price: p }); addPrice += p;
+                    });
+
+                    STATE.cart.push({ id: 'c_' + Date.now(), menuId: STATE.activeItem.id, name: STATE.activeItem.name, level: lvl, basePrice: base, finalPrice: base + addPrice, qty: qty, note: note, addons: addons });
+                    
+                    window.App.ui.modals.item.close(); 
+                    this.updateUI();
+                    
+                    const btn = document.getElementById('cart-filled-state');
+                    if(btn) { btn.classList.remove('animate-fade-in'); void btn.offsetWidth; btn.classList.add('animate-pop'); }
+                    window.App.ui.showToast("Berhasil dimasukkan keranjang! 🍜", "success");
+                },
+                remove: function(id) { STATE.cart = STATE.cart.filter(i => i.id !== id); this.renderReview(); this.updateUI(); },
+                changeQty: function(id, chg) { const item = STATE.cart.find(i => i.id === id); if (item && item.qty + chg >= 1) { item.qty += chg; this.renderReview(); this.updateUI(); } },
+                updateUI: function() {
+                    const e = document.getElementById('cart-empty-state'); const f = document.getElementById('cart-filled-state');
+                    if(!e || !f) return;
+                    if (STATE.cart.length === 0) { e.classList.remove('hidden'); f.classList.add('hidden'); f.classList.remove('flex'); } 
+                    else {
+                        e.classList.add('hidden'); f.classList.remove('hidden'); f.classList.add('flex');
+                        let tQ = 0; let tP = 0; STATE.cart.forEach(i => { tQ += i.qty; tP += (i.finalPrice * i.qty); });
+                        
+                        const qtSpan1 = document.getElementById('cart-total-qty');
+                        const qtSpan2 = document.getElementById('cart-btn-qty');
+                        const prSpan = document.getElementById('cart-total-price');
+                        if (qtSpan1) qtSpan1.innerText = tQ;
+                        if (qtSpan2) qtSpan2.innerText = tQ;
+                        if (prSpan) prSpan.innerText = `Rp ${tP.toLocaleString('id-ID')}`;
+                    }
+                },
+                renderReview: function() {
+                    const c = document.getElementById('cart-items-container');
+                    const t = document.getElementById('cart-modal-total');
+                    if(!c || !t) return;
+                    if (STATE.cart.length === 0) { window.App.ui.modals.cart.closePanel(); return; }
+                    let html = ''; let grand = 0;
+                    STATE.cart.forEach(i => {
+                        const sub = i.finalPrice * i.qty; grand += sub;
+                        let aHtml = i.addons.length > 0 ? `<div class="text-[9px] text-brand-leaf font-bold mt-1 bg-pastel-mint/50 px-2 py-1 rounded inline-block uppercase tracking-widest"><i class="ph-bold ph-plus"></i> ` + i.addons.map(a => a.name).join(', ') + `</div>` : '';
+                        let lvlHtml = i.level > 0 ? `<div class="inline-block bg-gray-100 text-gray-600 text-[9px] font-extrabold px-2 py-0.5 rounded uppercase border border-gray-200 mr-1">Level ${i.level}</div>` : '';
+                        html += `<div class="bg-white p-4 rounded-2xl border border-pastel-peach/50 shadow-sm relative overflow-hidden"><div class="absolute left-0 top-0 bottom-0 w-1.5 ${i.level > 5 ? 'bg-brand-terracotta' : 'bg-brand-rose'}"></div><div class="flex justify-between items-start gap-2 pl-2"><div class="flex-grow"><h4 class="font-bold text-brand-dark text-sm leading-tight mb-1.5 font-serif tracking-wide">${i.name}</h4>${lvlHtml}${aHtml}${i.note ? `<div class="text-[10px] text-gray-500 italic mt-2 bg-gray-50 p-2 rounded-lg border border-gray-100 shadow-inner"><i class="ph-fill ph-chat-teardrop text-brand-rose"></i> "${i.note}"</div>` : ''}</div><div class="text-right shrink-0"><span class="block font-extrabold text-brand-terracotta text-[15px] mb-3">Rp ${sub.toLocaleString('id-ID')}</span><button onclick="window.App.cart.remove('${i.id}')" class="text-[9px] text-red-500 bg-red-50 px-2 py-1.5 rounded-lg font-bold hover:bg-red-100 transition-colors uppercase tracking-widest border border-red-100">Hapus</button></div></div><div class="mt-4 flex items-center justify-between border-t border-gray-50 pt-3 pl-2"><span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">${i.qty} x @${i.finalPrice.toLocaleString('id-ID')}</span><div class="flex items-center gap-3 bg-gray-50 rounded-xl p-1 border border-gray-200"><button onclick="window.App.cart.changeQty('${i.id}', -1)" class="w-8 h-8 rounded-lg flex items-center justify-center bg-white text-gray-600 shadow-sm font-bold hover:bg-gray-100">-</button><span class="text-xs font-bold w-4 text-center">${i.qty}</span><button onclick="window.App.cart.changeQty('${i.id}', 1)" class="w-8 h-8 rounded-lg flex items-center justify-center bg-brand-dark text-white shadow-sm font-bold active:scale-95">+</button></div></div></div>`;
+                    });
+                    c.innerHTML = html; t.innerText = `Rp ${grand.toLocaleString('id-ID')}`;
+                }
+            },
+
+            // --- 10. CHECKOUT & WA FORMATTER ---
+            checkout: {
+                proceedToCheckout: function() {
+                    if(STATE.cart.length === 0) return;
+                    window.App.ui.modals.cart.closePanel(); 
+                    window.App.ui.modals.checkout.open();
+                    
+                    const nEl = document.getElementById('cust-name'); const pEl = document.getElementById('cust-phone'); const aEl = document.getElementById('cust-address');
+                    if(nEl) nEl.value = STATE.customer.name; if(pEl) pEl.value = STATE.customer.phone; if(aEl) aEl.value = STATE.customer.address;
+                    const rEl = document.querySelector(`input[name="orderMethod"][value="${STATE.customer.method}"]`);
+                    if(rEl) rEl.checked = true;
+                    this.toggleAddress();
+                },
+                toggleAddress: function() {
+                    const rEl = document.querySelector('input[name="orderMethod"]:checked');
+                    if(!rEl) return;
+                    const m = rEl.value;
+                    const addGr = document.getElementById('address-input-group'); const pickGr = document.getElementById('pickup-info-group');
+                    if (m === 'delivery') { if(pickGr) pickGr.style.display = 'none'; if(addGr) addGr.style.display = 'block'; } 
+                    else { if(addGr) addGr.style.display = 'none'; if(pickGr) pickGr.style.display = 'block'; }
+                },
+                validate: function() {
+                    const nEl = document.getElementById('cust-name'); const pEl = document.getElementById('cust-phone'); const aEl = document.getElementById('cust-address');
+                    if(!nEl || !pEl || !aEl) return;
+                    const n = nEl.value.trim(); const p = pEl.value.trim(); const a = aEl.value.trim();
+                    const rEl = document.querySelector('input[name="orderMethod"]:checked');
+                    if(!rEl) return; const m = rEl.value;
+
+                    if (n.length < 3) { window.App.ui.showToast("Tolong isi nama lengkap ya kak 🙏", "error"); nEl.focus(); return; }
+                    if (p.replace(/\D/g,'').length < 9) { window.App.ui.showToast("Nomor WA tidak valid nih kak", "error"); pEl.focus(); return; }
+                    if (m === 'delivery' && a.length < 10) { window.App.ui.showToast("Alamatnya yang detail ya kak (RT/RW/Patokan) 🛵", "error"); aEl.focus(); return; }
+
+                    STATE.customer = { name: n, phone: p, method: m, address: a };
+                    this.renderReceipt();
+                    window.App.ui.modals.checkout.closePanel(); 
+                    window.App.ui.modals.receipt.open();
+                },
+                renderReceipt: function() {
+                    const now = new Date();
+                    const dEl = document.getElementById('receipt-date'); if(dEl) dEl.innerText = now.toLocaleDateString('id-ID', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+                    const rNm = document.getElementById('rec-name'); if(rNm) rNm.innerText = STATE.customer.name.toUpperCase(); 
+                    const rPh = document.getElementById('rec-phone'); if(rPh) rPh.innerText = STATE.customer.phone;
+                    const rMt = document.getElementById('rec-method'); if(rMt) rMt.innerText = STATE.customer.method === 'delivery' ? 'DIANTAR' : 'AMBIL SENDIRI';
+                    
+                    const rAdR = document.getElementById('rec-address-row'); const rAd = document.getElementById('rec-address');
+                    if (STATE.customer.method === 'delivery') { if(rAdR) rAdR.style.display = 'flex'; if(rAd) rAd.innerText = STATE.customer.address; } 
+                    else { if(rAdR) rAdR.style.display = 'none'; }
+
+                    let h = ''; let grand = 0;
+                    STATE.cart.forEach(i => {
+                        const sub = i.finalPrice * i.qty; grand += sub;
+                        h += `<tr class="border-b border-gray-200 border-dashed last:border-0"><td class="py-2.5 pr-2"><div class="font-bold leading-tight uppercase text-[11px]">${i.name}</div>${i.level > 0 ? `<div class="text-[9px] text-gray-500 mt-1">LV ${i.level}</div>` : ''}${i.addons.length > 0 ? `<div class="text-[8px] text-gray-400 mt-0.5">+ ${i.addons.map(a=>a.name).join(', ')}</div>` : ''}</td><td class="py-2.5 text-center font-bold text-[11px]">${i.qty}</td><td class="py-2.5 text-right"><div class="font-bold text-[11px]">${sub.toLocaleString('id-ID')}</div><div class="text-[8px] text-gray-400">@${i.finalPrice.toLocaleString('id-ID')}</div></td></tr>`;
+                    });
+                    const rIt = document.getElementById('receipt-items'); if(rIt) rIt.innerHTML = h;
+                    const rGt = document.getElementById('receipt-grand-total'); if(rGt) rGt.innerText = `Rp ${grand.toLocaleString('id-ID')}`;
+                },
+                executeWhatsApp: function() {
+                    if(!window.App.security.validate() && !STATE.loyalty.trusted) { window.App.ui.showToast(`Jawaban Captcha Salah!`, "error"); window.App.security.generateCaptcha(); return; }
+
+                    let grand = 0; STATE.cart.forEach(i => grand += i.finalPrice * i.qty);
+                    window.App.loyalty.save();
+                    
+                    let text = `🔥 *PESANAN BARU!* 🔥\n=========================\n`;
+                    text += `👤 *${STATE.customer.name.toUpperCase()}*\n🛵 *${STATE.customer.method === 'delivery' ? 'DIANTAR KURIR' : 'AMBIL SENDIRI'}*\n📞 ${STATE.customer.phone}\n`;
+                    if (STATE.customer.method === 'delivery') text += `📍 *Alamat:* ${STATE.customer.address}\n`;
+                    text += `=========================\n\n📝 *DAFTAR PESANAN:*\n`;
+                    
+                    STATE.cart.forEach((i, idx) => {
+                        text += `*${idx+1}️⃣ ${i.qty}x ${i.name.toUpperCase()}*\n`;
+                        if(i.level > 0) text += `   🌶️ Level: ${i.level}\n`;
+                        if(i.addons.length > 0) text += `   ➕ Ekstra: ${i.addons.map(a => a.name).join(', ')}\n`;
+                        if(i.note) text += `   💬 *Catatan:* _${i.note}_\n`;
+                        text += `\n`;
+                    });
+
+                    text += `=========================\n💰 *TOTAL HARGA: Rp ${grand.toLocaleString('id-ID')}*\n${STATE.customer.method === 'delivery' ? '*(Belum termasuk ongkir)*\n' : ''}=========================\nMohon segera diproses ya! 🙏`;
+
+                    const waUrl = `https://wa.me/${CONFIG.store.WA}?text=${encodeURIComponent(text)}`;
+                    window.App.ui.modals.antiSpam.close();
+                    const bFw = document.getElementById('btn-final-wa'); if(bFw) bFw.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i> Mengalihkan...';
+                    
+                    setTimeout(() => {
+                        window.open(waUrl, '_blank');
+                        window.App.ui.modals.success.open();
+                        if(bFw) bFw.innerHTML = '<i class="ph-bold ph-paper-plane-right text-sm"></i> Kirim WA'; 
+                    }, 800);
+                }
+            },
+
+            // --- 11. CLOUD REVIEWS ENGINE ---
+            reviews: {
+                fetchRealtime: function() {
+                    if (!window.App.fbDb) return;
+                    const ref = window.firebaseModules.collection(window.App.fbDb, 'artifacts', window.App.fbAppId, 'public', 'data', 'reviews');
+                    window.firebaseModules.onSnapshot(ref, (snap) => {
+                        const data = []; snap.forEach(d => data.push({ id: d.id, ...d.data() }));
+                        data.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+                        STATE.reviews = data; this.render();
+                    }, e => { console.error(e); this.loadDummy(); });
+                },
+                submit: async function() {
+                    const nEl = document.getElementById('review-name'); const tEl = document.getElementById('review-text'); const rEl = document.getElementById('review-rating');
+                    if(!nEl || !tEl || !rEl) return;
+                    const name = nEl.value.trim(); const text = tEl.value.trim(); const rating = parseInt(rEl.value);
+                    if(!name || rating === 0 || !text) { window.App.ui.showToast("Mohon isi semua kolom ulasan ya kak", "error"); return; }
+                    
+                    const btn = document.getElementById('btn-submit-review');
+                    if(btn) { btn.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i> Mengirim...'; btn.classList.add('opacity-50', 'pointer-events-none'); }
+
+                    try {
+                        if(window.App.fbDb) {
+                            const ref = window.firebaseModules.collection(window.App.fbDb, 'artifacts', window.App.fbAppId, 'public', 'data', 'reviews');
+                            await window.firebaseModules.addDoc(ref, { name, rating, text, createdAt: window.firebaseModules.serverTimestamp() });
+                        } else {
+                            STATE.reviews.unshift({ name, rating, text, createdAt: { toMillis: ()=>Date.now() } }); this.render();
+                        }
+                        window.App.ui.showToast("Terima kasih atas ulasannya! ✨", "success"); window.App.ui.modals.review.close();
+                    } catch (e) { window.App.ui.showToast("Gagal mengirim.", "error"); } 
+                    finally { if(btn) { btn.innerHTML = '<i class="ph-bold ph-paper-plane-right"></i> Kirim'; btn.classList.remove('opacity-50', 'pointer-events-none'); } }
+                },
+                loadDummy: function() {
+                    STATE.reviews = [
+                        { name: "Andi R", rating: 5, text: "Beneran pedes gila! Cocok banget buat yg suka nantang nyali." },
+                        { name: "Sarah M", rating: 5, text: "Sosisnya the best, digoreng garing. Background musik webnya bikin rileks pas order 😍" }
+                    ];
+                    this.render();
+                },
+                render: function() {
+                    const c = document.getElementById('reviews-container');
+                    if(!c) return;
+                    if(STATE.reviews.length === 0) { c.innerHTML = `<p class="text-xs text-center text-gray-400 italic py-4">Jadilah yang pertama mengulas!</p>`; return; }
+                    
+                    let tStar = 0; STATE.reviews.forEach(r => tStar += r.rating);
+                    const hrScore = document.getElementById('header-rating-score'); const hrCt = document.getElementById('header-review-count');
+                    if(hrScore) hrScore.innerText = (tStar / STATE.reviews.length).toFixed(1);
+                    if(hrCt) hrCt.innerText = STATE.reviews.length + "+";
+
+                    let h = '';
+                    STATE.reviews.slice(0, 5).forEach(r => {
+                        let stars = ''; for(let i=0; i<5; i++) stars += `<i class="ph-fill ph-star ${i < r.rating ? 'text-brand-gold' : 'text-gray-200'} text-sm"></i>`;
+                        h += `<div class="bg-white p-4.5 rounded-2xl border border-pastel-peach/50 shadow-sm flex gap-3.5 items-start animate-fade-in"><div class="w-10 h-10 rounded-full bg-pastel-blush text-brand-rose font-extrabold flex items-center justify-center shrink-0 border border-pastel-peach text-lg font-serif uppercase">${r.name.charAt(0)}</div><div><div class="flex items-center gap-2 mb-1"><span class="font-bold text-brand-dark text-[13px] tracking-wide">${r.name}</span><div class="flex">${stars}</div></div><p class="text-xs text-gray-600 leading-relaxed font-medium">"${r.text}"</p></div></div>`;
+                    });
+                    c.innerHTML = h;
+                }
+            },
+
+            // --- 12. UI CONTROLLER ---
+            ui: {
+                toggleBodyScroll: function(disable) {
+                    if(disable) { document.body.classList.add('modal-open'); }
+                    else { document.body.classList.remove('modal-open'); }
+                },
+                setStatus: function(isOpen, text) {
+                    const t = document.getElementById('status-text'); const p = document.getElementById('status-ping');
+                    if (!t || !p) return;
+                    t.innerText = text;
+                    if (isOpen) { p.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"; p.nextElementSibling.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"; } 
+                    else { p.className = "hidden"; p.nextElementSibling.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"; }
+                },
+                scrollTo: function(id) { const el = document.getElementById(id); if(el) el.scrollIntoView({ behavior: 'smooth' }); },
+                showToast: function(msg, type = "info") {
+                    const c = document.getElementById('toast-container'); if(!c) return;
+                    const t = document.createElement('div');
+                    let cols = "bg-gray-800 text-white"; let ico = "ph-info";
+                    if(type === "error") { cols = "bg-red-50 text-red-600 border-red-200 shadow-[0_5px_15px_rgba(220,38,38,0.2)]"; ico = "ph-warning-circle"; }
+                    if(type === "success") { cols = "bg-pastel-mint text-brand-leaf border-green-200 shadow-[0_5px_15px_rgba(74,222,128,0.2)]"; ico = "ph-check-circle"; }
+                    t.className = `flex items-center gap-3 px-5 py-4 rounded-2xl border shadow-2xl text-xs font-bold animate-slide-down ${cols} w-full`;
+                    t.innerHTML = `<i class="ph-fill ${ico} text-2xl"></i> <span class="leading-relaxed">${msg}</span>`;
+                    c.appendChild(t);
+                    setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(-20px)'; t.style.transition = 'all 0.4s ease'; setTimeout(() => t.remove(), 400); }, 3500);
+                },
+                closeAllModals: function() {
+                    ['item-modal', 'cart-modal', 'checkout-modal', 'receipt-modal'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if(el) { el.classList.remove('active'); if(el.classList.contains('slide-panel')) el.classList.remove('translate-x-0'); if(id !== 'item-modal') el.classList.add('translate-x-full'); }
+                    });
+                    const am = document.getElementById('antispam-modal'); const ab = document.getElementById('antispam-box');
+                    if(am && ab) { am.classList.remove('active'); ab.classList.remove('active'); setTimeout(() => am.classList.add('hidden'), 300); }
+                    const ad = document.getElementById('admin-modal'); const abd = document.getElementById('admin-box');
+                    if(ad && abd) { ad.classList.remove('active'); abd.classList.remove('active'); setTimeout(() => ad.classList.add('hidden'), 300); }
+
+                    const bd = document.getElementById('global-backdrop'); if(bd) bd.classList.remove('active');
+                    const imf = document.getElementById('item-modal-footer'); if(imf) imf.style.transform = 'translateY(100%)';
+                    this.toggleBodyScroll(false);
+                    setTimeout(() => { STATE.activeItem = null; }, 400);
+                },
+                modals: {
+                    item: { 
+                        open: function(i, hasLvl) { 
+                            if (!STATE.isStoreOpen) { window.App.ui.showToast("Toko tutup 🙏", "error"); return; } 
+                            STATE.activeItem = i; 
+                            const lS = document.getElementById('modal-level-slider'); if(lS) lS.value = 1; 
+                            const qE = document.getElementById('modal-qty'); if(qE) qE.innerText = 1; 
+                            const mN = document.getElementById('modal-note'); if(mN) mN.value = ''; 
+                            document.querySelectorAll('.addon-checkbox').forEach(cb => cb.checked = false); 
+                            const mIN = document.getElementById('modal-item-name'); if(mIN) mIN.innerText = i.name; 
+                            const mID = document.getElementById('modal-item-desc'); if(mID) mID.innerText = i.desc; 
+                            const badge = document.getElementById('modal-bestseller-badge'); 
+                            if(badge) { if(i.badge === 'Best Seller') badge.classList.remove('hidden'); else badge.classList.add('hidden'); }
+                            const lvlContainer = document.getElementById('level-container'); 
+                            if(lvlContainer) { if(hasLvl) lvlContainer.classList.remove('hidden'); else lvlContainer.classList.add('hidden'); }
+                            window.App.menu.updateCalculations(); 
+                            
+                            const bd = document.getElementById('global-backdrop'); 
+                            if(bd) { bd.classList.add('active'); bd.style.zIndex = '50'; }
+                            const im = document.getElementById('item-modal'); if(im) im.classList.add('active'); 
+                            const imf = document.getElementById('item-modal-footer'); if(imf) { imf.style.transform = 'translateY(0)'; }
+                            window.App.ui.toggleBodyScroll(true);
+                        }, 
+                        close: function() { 
+                            const im = document.getElementById('item-modal'); if(im) im.classList.remove('active'); 
+                            const imf = document.getElementById('item-modal-footer'); if(imf) imf.style.transform = 'translateY(100%)';
+                            const bd = document.getElementById('global-backdrop'); 
+                            if(bd) bd.classList.remove('active'); 
+                            window.App.ui.toggleBodyScroll(false);
+                        } 
+                    },
+                    cart: { 
+                        open: function() { 
+                            window.App.cart.renderReview(); 
+                            const cm = document.getElementById('cart-modal'); if(cm) cm.classList.add('active'); 
+                            const bd = document.getElementById('global-backdrop'); if(bd) { bd.classList.add('active'); bd.style.zIndex = '50'; }
+                            window.App.ui.toggleBodyScroll(true);
+                        }, 
+                        closePanel: function() { const cm = document.getElementById('cart-modal'); if(cm) cm.classList.remove('active'); }, 
+                        close: function() { this.closePanel(); const bd = document.getElementById('global-backdrop'); if(bd) bd.classList.remove('active'); window.App.cart.updateUI(); window.App.ui.toggleBodyScroll(false); } 
+                    },
+                    checkout: { 
+                        open: function() { const com = document.getElementById('checkout-modal'); if(com) com.classList.add('active'); }, 
+                        closePanel: function() { const com = document.getElementById('checkout-modal'); if(com) com.classList.remove('active'); }, 
+                        back: function() { this.closePanel(); const cm = document.getElementById('cart-modal'); if(cm) cm.classList.add('active'); } 
+                    },
+                    receipt: { 
+                        open: function() { const rm = document.getElementById('receipt-modal'); if(rm) rm.classList.add('active'); }, 
+                        closePanel: function() { const rm = document.getElementById('receipt-modal'); if(rm) rm.classList.remove('active'); }, 
+                        back: function() { this.closePanel(); const com = document.getElementById('checkout-modal'); if(com) com.classList.add('active'); } 
+                    },
+                    antiSpam: { 
+                        open: function() { 
+                            const asm = document.getElementById('antispam-modal'); const asb = document.getElementById('antispam-box');
+                            if(asm && asb) {
+                                asm.classList.remove('hidden'); 
+                                setTimeout(() => { asm.classList.add('active'); asb.classList.add('active'); }, 10); 
+                            }
+                        }, 
+                        close: function() { 
+                            const asm = document.getElementById('antispam-modal'); const asb = document.getElementById('antispam-box');
+                            if(asm && asb) {
+                                asm.classList.remove('active'); asb.classList.remove('active'); 
+                                setTimeout(() => asm.classList.add('hidden'), 300); 
+                            }
+                        } 
+                    },
+                    success: { 
+                        open: function() { 
+                            window.App.ui.closeAllModals(); 
+                            const sm = document.getElementById('success-modal'); const sb = document.getElementById('success-box'); 
+                            if(sm && sb) {
+                                sm.classList.remove('hidden'); 
+                                setTimeout(() => { sm.classList.add('active'); sb.classList.add('active'); }, 50); 
+                            }
+                            STATE.cart = []; window.App.cart.updateUI(); 
+                        } 
+                    },
+                    review: { 
+                        open: function() { 
+                            if (!STATE.loyalty.trusted) { window.App.ui.showToast("Hanya pembeli yang sudah memesan yang dapat memberi ulasan 😊", "error"); return; }
+                            const am = document.getElementById('add-review-modal'); const ab = document.getElementById('add-review-box');
+                            if(am && ab) {
+                                am.classList.remove('hidden'); 
+                                setTimeout(()=> { am.classList.add('active'); ab.classList.add('active'); }, 10); 
+                            }
+                        }, 
+                        close: function() { 
+                            const am = document.getElementById('add-review-modal'); const ab = document.getElementById('add-review-box');
+                            if(am && ab) {
+                                am.classList.remove('active'); ab.classList.remove('active'); 
+                                setTimeout(()=> am.classList.add('hidden'), 300); 
+                            }
+                        } 
+                    },
+                    admin: {
+                        open: function() {
+                            const am = document.getElementById('admin-modal'); const ab = document.getElementById('admin-box');
+                            if(am && ab) {
+                                am.classList.remove('hidden'); 
+                                setTimeout(()=> { am.classList.add('active'); ab.classList.add('active'); }, 10); 
+                            }
+                        },
+                        close: function() {
+                            const am = document.getElementById('admin-modal'); const ab = document.getElementById('admin-box');
+                            if(am && ab) {
+                                am.classList.remove('active'); ab.classList.remove('active'); 
+                                setTimeout(()=> am.classList.add('hidden'), 300); 
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Bind cleanly to window object
+        window.App = App;
+        window.STATE = STATE;
+
+        // Initialize on DOM load
+        document.addEventListener('DOMContentLoaded', () => { window.App.init(); });
+
     </script>
 </body>
 </html>
