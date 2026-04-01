@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Menu Spesial - Dapur Mama El</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif']
+                    },
+                    colors: {
+                        brand: {
+                            light: '#FFF7F3',     // Krem hangat
+                            peach: '#FFDDC1',     // Persik lembut
+                            orange: '#FF7E5F',    // Orange cerah
+                            terracotta: '#D45D3A', // Terracotta/merah bata mewah
+                            dark: '#4A2511',      // Cokelat tua untuk teks
+                            leaf: '#4CAF50'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 4s ease-in-out infinite',
+                        'float-delayed': 'float 4s ease-in-out 2s infinite',
+                        'bounce-slight': 'bounceSlight 2s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-8px) rotate(3deg)' },
+                        },
+                        bounceSlight: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-3px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            background-color: #FFF2EB; /* Soft warm background */
+            -webkit-tap-highlight-color: transparent; 
+            overflow-x: hidden;
+        }
+        
+        /* Custom Elegant Range Slider */
+        input[type=range] {
+            -webkit-appearance: none; width: 100%; background: transparent; position: relative; z-index: 10;
+        }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 26px; width: 26px; border-radius: 50%;
+            background: #FF7E5F; cursor: pointer; margin-top: -10px;
+            box-shadow: 0 4px 10px rgba(255, 126, 95, 0.5); 
+            border: 3px solid white;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        input[type=range]::-webkit-slider-thumb:active { transform: scale(1.25); }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 6px; cursor: pointer; 
+            background: linear-gradient(to right, #FFDDC1, #FF7E5F); 
+            border-radius: 3px;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .modal-enter { opacity: 0; transform: translateY(100%); transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+        .modal-enter-active { opacity: 1; transform: translateY(0); }
+        
+        .fade-enter { opacity: 0; transition: opacity 0.3s ease; }
+        .fade-enter-active { opacity: 1; }
+
+        /* Estetik Floral Pattern Background */
+        .bg-floral {
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 10c-3.8 0-7 3.2-7 7s3.2 7 7 7 7-3.2 7-7-3.2-7-7-7zm0 18c-6.8 0-12 5.2-12 12s5.2 12 12 12 12-5.2 12-12-5.2-12-12-12zm0 28c-3.8 0-7 3.2-7 7s3.2 7 7 7 7-3.2 7-7-3.2-7-7-7zM16 40c0-3.8-3.2-7-7-7s-7 3.2-7 7 3.2 7 7 7 7-3.2 7-7zm48 0c0-3.8-3.2-7-7-7s-7 3.2-7 7 3.2 7 7 7 7-3.2 7-7z' fill='%23D45D3A' fill-opacity='0.04' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        /* Glassmorphism Header */
+        .glass-header {
+            background: linear-gradient(135deg, rgba(255, 247, 243, 0.95), rgba(255, 221, 193, 0.85));
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="pb-36 text-brand-dark antialiased">
+
+    <!-- Kontainer Partikel Global -->
+    <div id="particle-container" class="fixed inset-0 pointer-events-none z-[100] overflow-hidden"></div>
+
+    <div class="max-w-md mx-auto bg-brand-light min-h-screen relative shadow-2xl overflow-hidden flex flex-col">
+        
+        <!-- Header Elegant & Vibrant -->
+        <header class="glass-header p-8 pt-10 rounded-b-[2.5rem] relative shrink-0 z-10 border-b border-white shadow-sm bg-floral">
+            <!-- Dekorasi Bunga Estetik (dipertahankan & dipercantik) -->
+            <div class="absolute top-2 left-3 text-brand-orange opacity-20 animate-float">
+                <i class="ph-fill ph-flower-lotus text-5xl"></i>
+            </div>
+            <div class="absolute bottom-3 right-4 text-brand-terracotta opacity-15 animate-float-delayed">
+                <i class="ph-fill ph-flower-tulip text-6xl"></i>
+            </div>
+            
+            <div class="relative z-10 text-center">
+                <p class="text-[10px] uppercase tracking-[0.3em] text-brand-terracotta font-bold mb-2">Spesial Menu</p>
+                <h1 class="text-3xl font-serif font-bold text-brand-dark leading-tight drop-shadow-sm">
+                    MIE JEBEW<br>
+                    <span class="text-2xl italic font-semibold text-brand-orange">Dapur Mama El</span>
+                </h1>
+                <div class="w-16 h-1 bg-gradient-to-r from-brand-peach via-brand-orange to-brand-terracotta mx-auto mt-4 rounded-full opacity-80"></div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow p-5 space-y-6 no-scrollbar overflow-y-auto">
+            
+            <!-- Instruksi Pemesanan Estetik -->
+            <section class="bg-white/80 backdrop-blur-sm border border-brand-peach rounded-2xl p-4 shadow-sm relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 w-20 h-20 bg-gradient-to-br from-brand-peach to-brand-orange rounded-full opacity-10"></div>
+                <h3 class="text-xs font-bold text-brand-dark uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <i class="ph-fill ph-sparkle text-brand-orange"></i> Cara Memesan
+                </h3>
+                <ul class="text-[11px] text-gray-600 space-y-2.5 font-medium">
+                    <li class="flex items-start gap-2"><div class="w-5 h-5 rounded-full bg-brand-peach text-brand-terracotta flex items-center justify-center shrink-0 mt-0.5 font-bold">1</div> Pilih menu & tentukan level pedasmu (1-10).</li>
+                    <li class="flex items-start gap-2"><div class="w-5 h-5 rounded-full bg-brand-peach text-brand-terracotta flex items-center justify-center shrink-0 mt-0.5 font-bold">2</div> Isi data diri & pilih metode pengiriman.</li>
+                    <li class="flex items-start gap-2"><div class="w-5 h-5 rounded-full bg-brand-peach text-brand-terracotta flex items-center justify-center shrink-0 mt-0.5 font-bold">3</div> Kirim pesanan otomatis via WhatsApp.</li>
+                </ul>
+            </section>
+
+            <!-- Daftar Menu -->
+            <section id="menu-container" class="space-y-8 mt-6">
+                <!-- Diisi oleh JS -->
+            </section>
+
+            <hr class="border-dashed border-brand-peach my-6">
+
+            <!-- Keranjang Belanja -->
+            <section id="cart-section" class="hidden">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-brand-dark mb-4 flex items-center gap-2">
+                    <i class="ph-fill ph-shopping-bag-open text-brand-orange text-lg"></i> Pesananmu
+                </h2>
+                <div id="cart-items" class="space-y-3">
+                    <!-- Item keranjang -->
+                </div>
+            </section>
+
+            <!-- Form Data Pemesan -->
+            <section class="bg-white p-5 rounded-3xl border border-brand-peach shadow-sm relative overflow-hidden">
+                <!-- Aksen Dekorasi -->
+                <div class="absolute top-0 right-0 w-32 h-32 bg-brand-peach rounded-bl-full opacity-20 -z-0"></div>
+
+                <h2 class="text-sm font-bold uppercase tracking-wider text-brand-dark mb-5 flex items-center gap-2 relative z-10">
+                    <i class="ph-fill ph-identification-card text-brand-orange text-lg"></i> Data Pengiriman
+                </h2>
+                
+                <div class="space-y-5 relative z-10">
+                    <!-- Nama -->
+                    <div>
+                        <label class="block text-xs font-bold text-brand-dark mb-1.5 ml-1">Nama Lengkap</label>
+                        <input type="text" id="form-name" class="w-full border border-gray-100 bg-gray-50 shadow-inner rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-orange focus:border-brand-orange focus:bg-white transition-all outline-none" placeholder="Masukkan nama...">
+                    </div>
+
+                    <!-- Tipe Pesanan -->
+                    <div>
+                        <label class="block text-xs font-bold text-brand-dark mb-2 ml-1">Metode Pesanan</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="flex flex-col items-center justify-center gap-1.5 p-3 bg-gray-50 border border-gray-100 rounded-xl cursor-pointer transition-all has-[:checked]:border-brand-orange has-[:checked]:bg-orange-50 has-[:checked]:text-brand-terracotta has-[:checked]:shadow-md text-gray-500 font-medium text-xs hover:border-brand-peach">
+                                <input type="radio" name="orderType" value="delivery" class="hidden" checked onchange="toggleAddress()">
+                                <i class="ph-fill ph-moped text-2xl mb-1"></i> Diantar
+                            </label>
+                            <label class="flex flex-col items-center justify-center gap-1.5 p-3 bg-gray-50 border border-gray-100 rounded-xl cursor-pointer transition-all has-[:checked]:border-brand-orange has-[:checked]:bg-orange-50 has-[:checked]:text-brand-terracotta has-[:checked]:shadow-md text-gray-500 font-medium text-xs hover:border-brand-peach">
+                                <input type="radio" name="orderType" value="pickup" class="hidden" onchange="toggleAddress()">
+                                <i class="ph-fill ph-storefront text-2xl mb-1"></i> Ambil Sendiri
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Alamat Input (Delivery) -->
+                    <div id="address-container" class="transition-all duration-300 transform origin-top">
+                        <label class="block text-xs font-bold text-brand-dark mb-1.5 ml-1">Alamat Pengiriman</label>
+                        <textarea id="form-address" rows="2" class="w-full border border-gray-100 bg-gray-50 shadow-inner rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-orange focus:border-brand-orange focus:bg-white transition-all outline-none resize-none" placeholder="Detail alamat atau patokan rumah..."></textarea>
+                    </div>
+
+                    <!-- Info Pickup -->
+                    <div id="pickup-info" class="hidden transition-all duration-300 transform origin-top fade-enter">
+                        <div class="bg-gradient-to-br from-brand-peach/30 to-brand-orange/10 rounded-xl p-4 border border-brand-orange/20 shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-brand-orange to-brand-terracotta"></div>
+                            
+                            <h4 class="text-xs font-bold text-brand-dark mb-2 flex items-center gap-1.5">
+                                <i class="ph-fill ph-map-pin-line text-brand-terracotta"></i> Lokasi Pengambilan
+                            </h4>
+                            <p class="text-[11px] leading-relaxed text-brand-dark/80 font-bold mb-4">
+                                DESA BATUNYANA RT 03/ RW 01<br>
+                                RUMAH NOMOR 9<br>
+                                KEC. BOJONG, KAB. TEGAL
+                            </p>
+                            
+                            <a href="intent://maps.google.com/maps?daddr=-7.1326029,109.1766695&amp;ll=#Intent;scheme=http;package=com.google.android.apps.maps;end" 
+                               class="inline-flex items-center justify-center gap-2 w-full bg-white text-brand-terracotta font-bold text-xs py-2.5 rounded-lg border border-brand-peach shadow-sm transition-colors hover:bg-brand-peach/50" onclick="triggerClickParticles(event)">
+                                <i class="ph-fill ph-map-trifold text-lg"></i> Buka di Google Maps
+                            </a>
+                            <p class="text-[9px] text-gray-500 text-center mt-2">Jika tombol tidak berfungsi, tekan <a href="https://www.google.com/maps/place/MIE+JEBEW+D.O,+RT.03%2FRW.01,+Sekawera,+Batunyana,+Kec.+Bojong,+Kabupaten+Tegal,+Jawa+Tengah+52465/@-7.1328028,109.1765701,19z/data=!4m6!3m5!1s0x2e6f93a819e72d6f:0xb8fc24363e1dc946!8m2!3d-7.1326029!4d109.1766695!16s%2Fg%2F11n505zs89" target="_blank" class="underline text-brand-orange">link web ini</a>.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+
+        <!-- Sticky Checkout Button -->
+        <footer class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-md border-t border-brand-peach/50 p-5 z-20 pb-6 rounded-t-3xl shadow-[0_-15px_40px_rgba(212,93,58,0.08)]">
+            <div class="flex justify-between items-center mb-4 px-1">
+                <div>
+                    <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">Total Bayar</p>
+                    <p class="text-2xl font-serif font-bold text-brand-terracotta leading-none drop-shadow-sm" id="total-price-display">Rp 0</p>
+                </div>
+                <div class="bg-gradient-to-r from-brand-peach to-brand-orange text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-md">
+                    <span id="total-qty-display">0</span> Item
+                </div>
+            </div>
+            
+            <button onclick="processOrder(event)" id="btn-submit" class="w-full bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white font-bold py-3.5 rounded-2xl flex justify-center items-center gap-2 opacity-50 cursor-not-allowed transition-all shadow-[0_8px_20px_rgba(37,211,102,0.3)] hover:shadow-[0_10px_25px_rgba(37,211,102,0.4)] hover:-translate-y-0.5 active:scale-95">
+                <i class="ph-fill ph-whatsapp-logo text-2xl"></i>
+                <span class="tracking-wide text-sm">Pesan via WhatsApp</span>
+            </button>
+            
+            <div id="error-toast" class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-red-500 text-white text-xs font-bold py-2 px-4 rounded-full shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 whitespace-nowrap flex items-center gap-2">
+                <i class="ph-fill ph-warning-circle"></i>
+                <span id="error-msg-text">Lengkapi data dulu ya!</span>
+            </div>
+        </footer>
+
+        <!-- MODAL: Tambah ke Keranjang -->
+        <div id="modal-backdrop" class="fixed inset-0 bg-brand-dark/50 backdrop-blur-[2px] z-40 hidden opacity-0 transition-opacity duration-400" onclick="closeModal()"></div>
+        
+        <div id="item-modal" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white rounded-t-[2.5rem] z-50 modal-enter hidden flex flex-col max-h-[85vh] shadow-[0_-20px_50px_rgba(74,37,17,0.2)]">
+            <div class="p-6 overflow-y-auto no-scrollbar pb-24 relative">
+                
+                <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
+                
+                <h3 id="modal-item-name" class="text-2xl font-serif font-bold text-brand-terracotta leading-tight">Nama Menu</h3>
+                <p id="modal-item-desc" class="text-xs text-gray-500 mt-2 font-medium leading-relaxed">Deskripsi menu</p>
+                
+                <hr class="border-gray-100 my-5">
+
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <label class="font-bold text-xs uppercase tracking-wider text-brand-dark flex items-center gap-1">
+                            <i class="ph-fill ph-fire text-brand-orange text-base"></i> Level Pedas
+                        </label>
+                        <span class="bg-gradient-to-r from-brand-orange to-brand-terracotta text-white text-xs font-extrabold px-3 py-1 rounded-full shadow-sm animate-bounce-slight">Lv <span id="modal-level-display">1</span></span>
+                    </div>
+                    
+                    <div class="pt-3 pb-2 relative px-2">
+                        <input type="range" id="modal-level-slider" min="1" max="10" value="1" oninput="updateModalPrice(event)">
+                        <div class="flex justify-between text-[10px] font-bold text-brand-terracotta mt-3">
+                            <span>Lv 1</span>
+                            <span>Lv 5</span>
+                            <span>Lv 10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <label class="font-bold text-xs uppercase tracking-wider text-brand-dark block mb-2">Catatan Khusus <span class="text-gray-400 font-normal normal-case">(Opsional)</span></label>
+                    <input type="text" id="modal-note" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-xs focus:ring-2 focus:ring-brand-orange focus:border-brand-orange focus:bg-white transition-all outline-none" placeholder="Cth: Ekstra kuah, jangan pakai bawang, dll.">
+                </div>
+
+                <div class="mt-6 flex items-center justify-between bg-brand-light p-3 rounded-2xl border border-brand-peach/50">
+                    <div>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">Harga Satuan</p>
+                        <p id="modal-price-display" class="font-serif font-bold text-brand-terracotta text-xl">Rp 0</p>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 bg-white p-1.5 rounded-2xl shadow-sm border border-gray-100">
+                        <button onclick="changeModalQty(-1)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 text-brand-dark hover:bg-gray-100 transition-colors"><i class="ph-bold ph-minus text-base"></i></button>
+                        <span id="modal-qty" class="w-6 text-center font-extrabold text-brand-dark text-lg">1</span>
+                        <button onclick="changeModalQty(1)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-br from-brand-orange to-brand-terracotta text-white shadow-md hover:shadow-lg transition-all active:scale-95"><i class="ph-bold ph-plus text-base"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="absolute bottom-0 left-0 right-0 p-5 bg-white/95 backdrop-blur-md border-t border-gray-100 rounded-t-3xl">
+                <button onclick="addToCart(event)" class="w-full bg-brand-dark text-brand-peach font-bold py-4 rounded-2xl transition-all hover:bg-black active:scale-[0.98] shadow-xl shadow-brand-dark/30 flex justify-center items-center gap-2 text-sm">
+                    <i class="ph-bold ph-plus-circle text-lg"></i> Tambahkan ke Pesanan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Utama & Animasi Partikel -->
+    <script>
+        // --- SISTEM PARTIKEL ---
+        const particleContainer = document.getElementById('particle-container');
+
+        // Partikel untuk Tombol (Confetti/Sparkles)
+        function triggerClickParticles(e) {
+            // Dapatkan posisi klik
+            const rect = e.target.getBoundingClientRect();
+            const x = e.clientX || rect.left + rect.width / 2;
+            const y = e.clientY || rect.top + rect.height / 2;
+            
+            const colors = ['#FF7E5F', '#D45D3A', '#FFDDC1', '#FFC107', '#4CAF50'];
+            
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'absolute rounded-full pointer-events-none';
+                
+                // Variasi ukuran & warna
+                const size = Math.random() * 8 + 4;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                
+                particleContainer.appendChild(particle);
+                
+                // Kalkulasi arah ledakan acak
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 60 + 30;
+                const tx = Math.cos(angle) * velocity;
+                const ty = Math.sin(angle) * velocity - (Math.random() * 40); // Cenderung ke atas
+                
+                // Animasi menggunakan Web Animations API
+                particle.animate([
+                    { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+                    { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 600 + Math.random() * 400,
+                    easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+                }).onfinish = () => particle.remove();
+            }
+        }
+
+        // Partikel untuk Slider (Percikan Api/Pedas)
+        let lastSliderParticleTime = 0;
+        function triggerSliderParticles(e) {
+            const now = Date.now();
+            if (now - lastSliderParticleTime < 50) return; // Batasi jumlah partikel agar tidak lag
+            lastSliderParticleTime = now;
+
+            const slider = e.target;
+            const rect = slider.getBoundingClientRect();
+            
+            // Perkiraan posisi thumb X berdasarkan value (0.0 sampai 1.0)
+            const percent = (slider.value - slider.min) / (slider.max - slider.min);
+            // Sesuaikan sedikit padding slider
+            const x = rect.left + (percent * (rect.width - 20)) + 10; 
+            const y = rect.top + (rect.height / 2);
+
+            // Kadang pakai emoji 🌶️, ✨, atau dot merah/orange
+            const particleTypes = ['🌶️', '✨', 'dot'];
+            const type = particleTypes[Math.floor(Math.random() * particleTypes.length)];
+            
+            const particle = document.createElement('div');
+            particle.className = 'absolute pointer-events-none font-bold text-xs flex items-center justify-center';
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            particle.style.zIndex = '110';
+            
+            if (type === 'dot') {
+                particle.style.width = '6px';
+                particle.style.height = '6px';
+                particle.style.borderRadius = '50%';
+                particle.style.backgroundColor = Math.random() > 0.5 ? '#FF7E5F' : '#FFC107';
+            } else {
+                particle.innerText = type;
+            }
+            
+            document.body.appendChild(particle);
+            
+            // Animasi melayang ke atas seperti asap/api
+            const tx = (Math.random() - 0.5) * 20;
+            const ty = -30 - Math.random() * 20;
+            
+            particle.animate([
+                { transform: 'translate(-50%, -50%) scale(0.5)', opacity: 1 },
+                { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1.5)`, opacity: 0 }
+            ], {
+                duration: 500 + Math.random() * 300,
+                easing: 'ease-out'
+            }).onfinish = () => particle.remove();
+        }
+
+
+        // --- DATABASE & LOGIKA UTAMA ---
+        const database = [
+            {
+                category: "Mie Jebew Spesial",
+                items: [
+                    { id: 'ori', name: 'Mie Jebew Original', desc: 'Mie kenyal dengan bumbu pedas gurih rahasia Dapur Mama El.', priceLow: 8000, priceHigh: 10000, img: 'https://cdn-icons-png.flaticon.com/512/3480/3480488.png' },
+                    { id: 'sos', name: 'Mie Jebew Sosis', desc: 'Mie pedas nikmat dipadukan dengan irisan sosis premium.', priceLow: 13000, priceHigh: 15000, img: 'https://cdn-icons-png.flaticon.com/512/3143/3143645.png' },
+                    { id: 'beef', name: 'Mie Jebew Beef', desc: 'Kemewahan mie pedas dengan topping beef slice gurih melimpah.', priceLow: 13000, priceHigh: 15000, img: 'https://cdn-icons-png.flaticon.com/512/3143/3143642.png' }
+                ]
+            },
+            {
+                category: "Paket Hemat (+ Es Teh)",
+                items: [
+                    { id: 'pk_ori', name: 'Paket Hemat Original', desc: 'Mie Jebew Original segar disajikan bersama Es Teh Manis dingin.', priceLow: 10000, priceHigh: 12000, img: 'https://cdn-icons-png.flaticon.com/512/3050/3050114.png' },
+                    { id: 'pk_sos', name: 'Paket Hemat Sosis', desc: 'Paket kenyang Mie Jebew Sosis lengkap dengan Es Teh Manis.', priceLow: 15000, priceHigh: 17000, img: 'https://cdn-icons-png.flaticon.com/512/3050/3050114.png' },
+                    { id: 'pk_beef', name: 'Paket Hemat Beef', desc: 'Pilihan premium Mie Jebew Beef ditambah segarnya Es Teh Manis.', priceLow: 15000, priceHigh: 17000, img: 'https://cdn-icons-png.flaticon.com/512/3050/3050114.png' }
+                ]
+            }
+        ];
+
+        const WA_NUMBER = "6283841027652"; 
+        let cart = []; 
+        let currentActiveItem = null; 
+
+        // 1. Inisialisasi Menu
+        function initApp() {
+            const container = document.getElementById('menu-container');
+            let html = '';
+
+            database.forEach(cat => {
+                html += `
+                    <div class="mb-7">
+                        <div class="flex items-center gap-3 mb-4">
+                            <h2 class="text-sm font-bold uppercase tracking-widest text-brand-dark bg-brand-peach/30 px-3 py-1 rounded-lg border border-brand-peach">${cat.category}</h2>
+                            <div class="h-px bg-gradient-to-r from-brand-peach to-transparent flex-grow"></div>
+                        </div>
+                        <div class="space-y-4">
+                `;
+                
+                cat.items.forEach(item => {
+                    html += `
+                        <div class="bg-white rounded-2xl p-3 pl-4 shadow-sm border border-brand-peach/30 flex justify-between items-center group hover:border-brand-orange hover:shadow-md transition-all cursor-pointer relative overflow-hidden" onclick='openModal(${JSON.stringify(item)})'>
+                            <!-- Aksen Kiri -->
+                            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-brand-orange to-brand-terracotta opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            
+                            <div class="pr-3 py-1">
+                                <h3 class="font-bold text-brand-dark text-[15px] mb-1 group-hover:text-brand-terracotta transition-colors">${item.name}</h3>
+                                <p class="text-[11px] text-gray-500 line-clamp-2 leading-relaxed mb-2.5 font-medium">${item.desc}</p>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[13px] font-extrabold text-brand-terracotta">Rp ${item.priceLow.toLocaleString('id-ID')}</span>
+                                    <span class="text-[10px] text-gray-400 font-medium line-through">Rp ${item.priceHigh.toLocaleString('id-ID')}</span>
+                                </div>
+                            </div>
+                            
+                            <button class="shrink-0 bg-brand-light text-brand-terracotta border border-brand-peach w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-brand-orange group-hover:to-brand-terracotta group-hover:text-white group-hover:border-transparent transition-all shadow-sm">
+                                <i class="ph-bold ph-plus text-base"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+                html += `</div></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // 2. Logika Modal
+        function openModal(item) {
+            currentActiveItem = item;
+            
+            document.getElementById('modal-level-slider').value = 1;
+            document.getElementById('modal-qty').innerText = 1;
+            document.getElementById('modal-note').value = '';
+            
+            document.getElementById('modal-item-name').innerText = item.name;
+            document.getElementById('modal-item-desc').innerText = item.desc;
+            updateModalPrice(); // Tanpa event supaya tidak keluar partikel saat pertama buka
+
+            const backdrop = document.getElementById('modal-backdrop');
+            const modal = document.getElementById('item-modal');
+            
+            backdrop.classList.remove('hidden');
+            modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                modal.classList.add('modal-enter-active');
+            }, 10);
+        }
+
+        function closeModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const modal = document.getElementById('item-modal');
+            
+            backdrop.classList.add('opacity-0');
+            modal.classList.remove('modal-enter-active');
+            
+            setTimeout(() => {
+                backdrop.classList.add('hidden');
+                modal.classList.add('hidden');
+                currentActiveItem = null;
+            }, 500); 
+        }
+
+        function updateModalPrice(e = null) {
+            const level = parseInt(document.getElementById('modal-level-slider').value);
+            document.getElementById('modal-level-display').innerText = level;
+            const price = (level <= 5) ? currentActiveItem.priceLow : currentActiveItem.priceHigh;
+            document.getElementById('modal-price-display').innerText = `Rp ${price.toLocaleString('id-ID')}`;
+            
+            // Trigger partikel jika diubah secara manual (ada event)
+            if(e) triggerSliderParticles(e);
+        }
+
+        function changeModalQty(change) {
+            let currentQty = parseInt(document.getElementById('modal-qty').innerText);
+            if (currentQty + change >= 1) {
+                document.getElementById('modal-qty').innerText = currentQty + change;
+            }
+        }
+
+        // 3. Logika Keranjang
+        function addToCart(e) {
+            triggerClickParticles(e); // Panggil efek partikel ledakan
+            
+            const level = parseInt(document.getElementById('modal-level-slider').value);
+            const qty = parseInt(document.getElementById('modal-qty').innerText);
+            const note = document.getElementById('modal-note').value.trim();
+            const price = (level <= 5) ? currentActiveItem.priceLow : currentActiveItem.priceHigh;
+
+            cart.push({
+                cartId: 'item_' + Date.now(),
+                name: currentActiveItem.name,
+                level: level,
+                price: price,
+                qty: qty,
+                note: note
+            });
+
+            closeModal();
+            renderCart();
+        }
+
+        function removeFromCart(cartId) {
+            cart = cart.filter(item => item.cartId !== cartId);
+            renderCart();
+        }
+
+        function renderCart() {
+            const cartSection = document.getElementById('cart-section');
+            const cartItemsContainer = document.getElementById('cart-items');
+            
+            if (cart.length === 0) {
+                cartSection.classList.add('hidden');
+                updateCheckoutTotal();
+                return;
+            }
+
+            cartSection.classList.remove('hidden');
+            let html = '';
+
+            cart.forEach(item => {
+                const subtotal = item.price * item.qty;
+                html += `
+                    <div class="bg-white p-3.5 rounded-2xl border border-brand-peach/50 flex justify-between items-center gap-3 shadow-sm relative overflow-hidden">
+                        <!-- Indikator warna level pedas -->
+                        <div class="absolute left-0 top-0 bottom-0 w-1.5 ${item.level > 5 ? 'bg-brand-terracotta' : 'bg-brand-orange'}"></div>
+                        
+                        <div class="flex-grow pl-2">
+                            <h4 class="font-bold text-sm text-brand-dark mb-1">${item.name}</h4>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md text-white ${item.level > 5 ? 'bg-brand-terracotta' : 'bg-brand-orange'}">Level ${item.level}</span>
+                                <span class="text-[11px] font-medium text-gray-500">${item.qty} x Rp ${item.price.toLocaleString('id-ID')}</span>
+                            </div>
+                            ${item.note ? `<p class="text-[10px] text-gray-400 mt-1.5 italic bg-gray-50 p-1 rounded"><i class="ph-fill ph-chat-teardrop-text text-brand-peach"></i> ${item.note}</p>` : ''}
+                        </div>
+                        <div class="flex flex-col items-end gap-2 shrink-0">
+                            <span class="font-extrabold text-[15px] text-brand-dark">Rp ${subtotal.toLocaleString('id-ID')}</span>
+                            <button onclick="removeFromCart('${item.cartId}')" class="text-xs text-red-400 hover:text-red-600 bg-red-50 hover:bg-red-100 px-2 py-1 rounded flex items-center gap-1 transition-colors font-semibold">
+                                <i class="ph-bold ph-trash"></i> Hapus
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            cartItemsContainer.innerHTML = html;
+            updateCheckoutTotal();
+        }
+
+        function updateCheckoutTotal() {
+            let total = 0;
+            let qty = 0;
+            cart.forEach(item => {
+                total += item.price * item.qty;
+                qty += item.qty;
+            });
+
+            document.getElementById('total-price-display').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+            document.getElementById('total-qty-display').innerText = qty;
+
+            const btnSubmit = document.getElementById('btn-submit');
+            if (qty > 0) {
+                btnSubmit.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnSubmit.classList.add('hover:-translate-y-0.5');
+            } else {
+                btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
+                btnSubmit.classList.remove('hover:-translate-y-0.5');
+            }
+        }
+
+        // 4. Logika Form Pengiriman
+        function toggleAddress() {
+            const orderType = document.querySelector('input[name="orderType"]:checked').value;
+            const addressContainer = document.getElementById('address-container');
+            const pickupInfo = document.getElementById('pickup-info');
+            
+            if (orderType === 'delivery') {
+                pickupInfo.classList.remove('fade-enter-active');
+                setTimeout(() => {
+                    pickupInfo.classList.add('hidden');
+                    addressContainer.classList.remove('hidden');
+                    void addressContainer.offsetWidth; 
+                    addressContainer.style.opacity = '1';
+                    addressContainer.style.transform = 'scaleY(1)';
+                }, 100);
+            } else {
+                addressContainer.style.opacity = '0';
+                addressContainer.style.transform = 'scaleY(0.9)';
+                setTimeout(() => {
+                    addressContainer.classList.add('hidden');
+                    pickupInfo.classList.remove('hidden');
+                    void pickupInfo.offsetWidth;
+                    pickupInfo.classList.add('fade-enter-active');
+                }, 300);
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('error-toast');
+            document.getElementById('error-msg-text').innerText = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => { toast.classList.add('opacity-0'); }, 3000);
+        }
+
+        // 5. Proses Output WhatsApp (Format Tepat Sesuai Request)
+        function processOrder(e) {
+            if (cart.length === 0) {
+                showToast("Pilih menu dulu yuk!");
+                return;
+            }
+
+            const name = document.getElementById('form-name').value.trim();
+            const orderType = document.querySelector('input[name="orderType"]:checked').value;
+            const address = document.getElementById('form-address').value.trim();
+
+            if (!name) {
+                showToast("Nama lengkap belum diisi");
+                document.getElementById('form-name').focus();
+                return;
+            }
+
+            if (orderType === 'delivery' && !address) {
+                showToast("Alamat pengiriman belum diisi");
+                document.getElementById('form-address').focus();
+                return;
+            }
+
+            // Panggil partikel saat berhasil checkout
+            triggerClickParticles(e);
+
+            let totalPrice = 0;
+            cart.forEach(item => totalPrice += item.price * item.qty);
+
+            let waText = `Halo Kak! Aku mau pesen 🚀\n\n`;
+            
+            // Data Pemesan
+            waText += `👤 *DATA PEMESAN*\n`;
+            waText += `Nama: ${name}\n`;
+            waText += `Metode: ${orderType === 'delivery' ? '🛵 Diantar (Delivery)' : '🏬 Ambil Sendiri (Pickup)'}\n`;
+            if (orderType === 'delivery') {
+                waText += `Alamat: ${address}\n`;
+            } else {
+                 waText += `Alamat: Batunyana\n`;
+            }
+            waText += `\n`;
+
+            // Detail Pesanan
+            waText += `🛍️ *DETAIL PESANAN*\n`;
+            cart.forEach((item, index) => {
+                const sub = item.price * item.qty;
+                waText += `${index + 1}. *${item.name} - Level ${item.level}*\n`;
+                waText += `   > *${item.qty} porsi* x Rp ${item.price.toLocaleString('id-ID')} = Rp ${sub.toLocaleString('id-ID')}\n`;
+                if (item.note) {
+                    waText += `   > _Catatan: ${item.note}_\n`;
+                }
+            });
+            waText += `\n`;
+
+            // Total
+            waText += `💰 *TOTAL HARGA: Rp ${totalPrice.toLocaleString('id-ID')}*\n`;
+            if (orderType === 'delivery') {
+                waText += `_(Belum termasuk ongkos kirim)_\n`;
+            }
+            
+            waText += `\nMohon segera diproses ya Kak, Terima kasih! ✨`;
+
+            // Buka WhatsApp (Beri jeda sedikit agar animasi ledakan terlihat)
+            setTimeout(() => {
+                const encodedText = encodeURIComponent(waText);
+                const waLink = `https://wa.me/${WA_NUMBER}?text=${encodedText}`;
+                window.open(waLink, '_blank');
+            }, 500);
+        }
+
+        window.onload = () => {
+            initApp();
+            document.getElementById('address-container').style.opacity = '1';
+            document.getElementById('address-container').style.transform = 'scaleY(1)';
+        };
+    </script>
+</body>
+</html>
